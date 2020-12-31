@@ -13,14 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+Auth::routes(['register' => false]);//デフォルトのアカウント登録機能のOFF
+Route::get('{any}', function () {
+    return view('index');
+})->where('any', '.*');
+
+/*
 Route::get('/', function () {
     return view('welcome');
 });
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+*/
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
