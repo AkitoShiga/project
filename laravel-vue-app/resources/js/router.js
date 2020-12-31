@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 // ページコンポーネントをインポートする
 import Shift from './pages/Shift.vue'
 import Login from './pages/Login.vue'
+import Register from './pages/Register.vue'
 
 // VueRouterプラグインを使用する
 // これによって<RouterView />コンポーネントなどを使うことができる
@@ -17,10 +18,15 @@ const routes = [
     name: 'Shift',
   },
   {
-    path: '/login',
+    path: '/Login',
     component: Login,
     name: 'Login',
-  }
+  },
+  {
+    path: '/Resister',
+    component: Register,
+    name: 'Register',
+  },
 ]
 
 // VueRouterインスタンスを作成する
