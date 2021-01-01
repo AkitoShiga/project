@@ -23,7 +23,7 @@
             "type": "php",
             "request": "launch",
             "port": 9001,
-            "serverSourceRoot": "/var/www/html/laravel-vue/app",
+            "serverSourceRoot": "/var/www/html/laravel-vue-app",
             "localSourceRoot": "${workspaceRoot}"
           }
     ]

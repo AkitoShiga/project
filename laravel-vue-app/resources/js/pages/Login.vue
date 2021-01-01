@@ -25,7 +25,7 @@ export default {
     methods: {
         login() {
             this.$store.dispatch("login", this.loginForm).then(() => {
-                this.$router.push({ name: "shift"});
+                this.$router.push({ name: "Shift"});
             });
         }
     }

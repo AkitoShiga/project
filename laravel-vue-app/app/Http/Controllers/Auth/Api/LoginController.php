@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -12,7 +12,8 @@ use Illuminate\Validation\ValidationException;
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
-      /**
+
+    /**
      * Handle a login request to the application.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -22,20 +23,25 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        //バリデーション
+        // バリデーション
         $this->validateLogin($request);
-        //ユーザーの取得
+
+        // ユーザーの取得
         $user = User::where('email', $request->email)->first();
-        //取得できない場合とパスワードが不一致の場合エラー
-        if(!$user || !Hash::check($request->password, $user->password)) {
+
+        // 取得できない場合、パスワードが不一致の場合エラー
+        if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => [('faild')],
+                'email' => [__('failed')],
             ]);
         }
-        //tokenの作成
+
+        // tokenの作成
         $token = $user->createToken($request->device_name)->plainTextToken;
+
         return response()->json(['token' => $token, 'user' => $user], 200);
     }
+
     /**
      * Validate the user login request.
      *
@@ -46,13 +52,16 @@ class LoginController extends Controller
      */
     protected function validateLogin(Request $request)
     {
+        // オーバーライドして、デバイス名を必須化しています
         $request->validate([
             $this->username() => 'required|string',
             'password' => 'required|string',
             'device_name' => 'required'
         ]);
     }
-        /**
+
+
+    /**
      * Handle a logout request to the application.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -61,9 +70,10 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $user = $request->user();
-        //tokenの削除
-        $user->tokens()->delete();
-        return response()->json(['message' => 'logouted']);
 
+        // tokenの削除
+        $user->tokens()->delete();
+
+        return response()->json(['message' => 'logouted']);
     }
 }

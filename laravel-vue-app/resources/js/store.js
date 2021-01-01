@@ -8,7 +8,10 @@ const state = {
 }
 const actions = {
     login(context, data) {
-        axios.post('localhost:8000'+'/api/login', data).then((result)=> {
+        let url = '127.0.0.1:8000/api/login';
+        let url2 = 'localhost:8000';
+        let url3 = '/api/login';
+        axios.post(url3, data).then((result)=> {
             context.commit("setUser", result.data.user);
             context.commit("setToken", result.data.token);
         }).catch(error => {
@@ -16,7 +19,8 @@ const actions = {
         })
     },
     register(context, data) {
-        axios.post(BASE_URL + '/api/register', data).then((result) => {
+        let url3 = '/api/register';
+        axios.post(url3, data).then((result) => {
             context.commit("setUser", result.data.user);
             context.commit("setToken", result.data.token);
         }).catch(error => {
