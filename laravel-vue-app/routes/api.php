@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\Api\LoginController;
+use App\Http\Controllers\Auth\Api\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,8 +25,8 @@ Route::group(['middleware' => ['auth:airlock']], function() {
     Route::get('user', function(Request $request) {
         return response()->json(['user' => $request->user()]);
     });
-    Route::post('logout', 'Auth\Api\LoginController@logout')->name('api.logout');
+    Route::post('logout', [LoginController::class,'logout'])->name('api.logout');
 });
 
-Route::post('register', 'Auth\Api\RegisterController@register')->name('api.register');
-Route::post('login', 'Auth\Api\LoginController@login')->name('api.login');
+Route::post('register', [RegisterController::class, 'register'])->name('api.register');
+Route::post('login', [LoginController::class, 'login'])->name('api.login');
