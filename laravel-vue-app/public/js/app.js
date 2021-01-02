@@ -1953,6 +1953,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "login",
   components: {},
@@ -1960,7 +1961,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       loginForm: {
         email: "",
-        password: ""
+        password: "",
+        device_name: ""
       }
     };
   },
@@ -1968,9 +1970,11 @@ __webpack_require__.r(__webpack_exports__);
     login: function login() {
       var _this = this;
 
-      this.$store.dispatch("login", this.loginForm).then(function () {
+      var data = this.loginForm;
+      data.device_name = navigator.userAgent;
+      this.$store.dispatch("login", data).then(function () {
         _this.$router.push({
-          name: "Shift"
+          name: "dashboard"
         });
       });
     }
@@ -2004,6 +2008,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "register",
   components: {},
@@ -2013,7 +2018,8 @@ __webpack_require__.r(__webpack_exports__);
         name: "",
         email: "",
         password: "",
-        password_confirmation: ""
+        password_confirmation: "",
+        device_name: ""
       }
     };
   },
@@ -2021,7 +2027,9 @@ __webpack_require__.r(__webpack_exports__);
     register: function register() {
       var _this = this;
 
-      this.$store.dispatch("register", this.registerForm).then(function () {
+      var data = this.registerForm;
+      data.device_name = navigator.userAgent;
+      this.$store.dispatch("register", data).then(function () {
         _this.$router.push({
           name: "Shift"
         });
@@ -37719,7 +37727,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("h1", [_vm._v("ログイン")]),
+    _c("h1", [_vm._v("login")]),
     _vm._v(" "),
     _c(
       "form",
@@ -37755,7 +37763,7 @@ var render = function() {
           }
         }),
         _vm._v(" "),
-        _c("label", { attrs: { form: "password" } }, [_vm._v("Password")]),
+        _c("label", { attrs: { for: "password" } }, [_vm._v("Password")]),
         _vm._v(" "),
         _c("input", {
           directives: [
@@ -37812,7 +37820,7 @@ var render = function() {
       "form",
       {
         on: {
-          subimit: function($event) {
+          submit: function($event) {
             $event.preventDefault()
             return _vm.register($event)
           }
@@ -54956,7 +54964,7 @@ var actions = {
       context.commit("setUser", result.data.user);
       context.commit("setToken", result.data.token);
     })["catch"](function (error) {
-      console.log("Error! HTTP Status: ".concat(error));
+      console.log("Error! HTTP Status: ".concat(error), error.response.data);
     });
   },
   register: function register(context, data) {
@@ -54965,7 +54973,7 @@ var actions = {
       context.commit("setUser", result.data.user);
       context.commit("setToken", result.data.token);
     })["catch"](function (error) {
-      console.log("Error! HTTP Status: ".concat(error));
+      console.log("Error! HTTP Status: ".concat(error), error.response.data);
     });
   }
 };
@@ -54985,7 +54993,7 @@ var mutations = {
       context.commit("setUser", null);
       context.commit("setToken", null);
     })["catch"](function (error) {
-      console.log("Error! HTTP Status: ".concat(error));
+      console.log("Error! HTTP Status: ".concat(error), error.response.data);
     });
   }
 };

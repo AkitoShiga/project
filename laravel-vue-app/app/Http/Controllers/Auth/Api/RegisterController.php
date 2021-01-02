@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth\Api;
 
 use App\Http\Controllers\Controller;
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Validator, Hash, DB};
@@ -20,7 +20,7 @@ class RegisterController extends Controller
         // ユーザーの作成とトークンの作成します
         $data = DB::transaction(function () use ($request) {
             $user = $this->create($request->all());
-            $token = $user->createToken($request->device_nam)->plainTextToken;
+            $token = $user->createToken($request->device_name)->plainTextToken;
             return json_encode(['token' => $token, 'user' => $user]);
         });
         // userとtokenのjsonを返却
@@ -47,7 +47,7 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return \App\User
+     * @return \App\Models\User
      */
     protected function create(array $data)
     {

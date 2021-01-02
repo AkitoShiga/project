@@ -15,7 +15,7 @@ const actions = {
             context.commit("setUser", result.data.user);
             context.commit("setToken", result.data.token);
         }).catch(error => {
-            console.log(`Error! HTTP Status: ${error}` );
+            console.log(`Error! HTTP Status: ${error}`, error.response.data );
         })
     },
     register(context, data) {
@@ -24,7 +24,7 @@ const actions = {
             context.commit("setUser", result.data.user);
             context.commit("setToken", result.data.token);
         }).catch(error => {
-            console.log(`Error! HTTP Status: ${error}`);
+            console.log(`Error! HTTP Status: ${error}`, error.response.data);
         });
     },
 }
@@ -44,7 +44,7 @@ const mutations = {
             context.commit("setUser", null);
             context.commit("setToken", null);
         }).catch(error => {
-            console.log(`Error! HTTP Status: ${error}`);
+            console.log(`Error! HTTP Status: ${error}`, error.response.data);
         });
     },
 }

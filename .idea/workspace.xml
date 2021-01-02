@@ -2,14 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="65afd44c-2bcd-4739-9f48-20ffe93fed1b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.vscode/launch.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/launch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/Auth/Api/LoginController.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/Auth/Api/LoginController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/Auth/Api/RegisterController.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/Auth/Api/RegisterController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/app/Models/User.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/config/auth.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/config/auth.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/pages/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/pages/Login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/pages/Register.vue" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/pages/Register.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/store.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/laravel-vue-app/composer.json</pharConfigPath>
     <execution />
   </component>
@@ -173,6 +181,7 @@
     <list>
       <item itemvalue="JavaScript Debug.Cors.php" />
       <item itemvalue="PHP Remote Debug.Laravel" />
+      <item itemvalue="PHP Script.Laravel" />
     </list>
     <recent_temporary>
       <list>
@@ -192,6 +201,7 @@
       <option name="presentableId" value="Default" />
       <updated>1609428085734</updated>
       <workItem from="1609428087394" duration="12265000" />
+      <workItem from="1609510837323" duration="1550000" />
     </task>
     <servers />
   </component>
@@ -216,29 +226,33 @@
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
     <state x="2138" y="302" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/2166.1080.1194.834/0.0.1440.900/3360.0.1600.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1609477904665" />
-    <state width="1878" height="387" key="GridCell.Tab.0.bottom" timestamp="1609506065213">
+    <state width="1878" height="387" key="GridCell.Tab.0.bottom" timestamp="1609510901523">
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
     <state width="1878" height="387" key="GridCell.Tab.0.bottom/0.0.1440.900/3360.52.1344.756/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609432662892" />
     <state width="1878" height="387" key="GridCell.Tab.0.bottom/0.23.1440.877/3360.75.1344.733/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609432630412" />
+    <state width="1878" height="387" key="GridCell.Tab.0.bottom/2166.1080.1194.834/0.0.1440.900/3360.0.1600.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1609510901523" />
     <state width="1878" height="387" key="GridCell.Tab.0.bottom/2166.1103.1194.811/0.23.1440.877/3360.23.1600.877/1440.0.1920.1080@1440.0.1920.1080" timestamp="1609506065213" />
-    <state width="1878" height="387" key="GridCell.Tab.0.center" timestamp="1609506065211">
+    <state width="1878" height="387" key="GridCell.Tab.0.center" timestamp="1609510901521">
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
     <state width="1878" height="387" key="GridCell.Tab.0.center/0.0.1440.900/3360.52.1344.756/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609432662890" />
     <state width="1878" height="387" key="GridCell.Tab.0.center/0.23.1440.877/3360.75.1344.733/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609432630408" />
+    <state width="1878" height="387" key="GridCell.Tab.0.center/2166.1080.1194.834/0.0.1440.900/3360.0.1600.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1609510901521" />
     <state width="1878" height="387" key="GridCell.Tab.0.center/2166.1103.1194.811/0.23.1440.877/3360.23.1600.877/1440.0.1920.1080@1440.0.1920.1080" timestamp="1609506065211" />
-    <state width="1878" height="387" key="GridCell.Tab.0.left" timestamp="1609506065210">
+    <state width="1878" height="387" key="GridCell.Tab.0.left" timestamp="1609510901520">
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
     <state width="1878" height="387" key="GridCell.Tab.0.left/0.0.1440.900/3360.52.1344.756/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609432662889" />
     <state width="1878" height="387" key="GridCell.Tab.0.left/0.23.1440.877/3360.75.1344.733/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609432630406" />
+    <state width="1878" height="387" key="GridCell.Tab.0.left/2166.1080.1194.834/0.0.1440.900/3360.0.1600.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1609510901520" />
     <state width="1878" height="387" key="GridCell.Tab.0.left/2166.1103.1194.811/0.23.1440.877/3360.23.1600.877/1440.0.1920.1080@1440.0.1920.1080" timestamp="1609506065210" />
-    <state width="1878" height="387" key="GridCell.Tab.0.right" timestamp="1609506065212">
+    <state width="1878" height="387" key="GridCell.Tab.0.right" timestamp="1609510901522">
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
     <state width="1878" height="387" key="GridCell.Tab.0.right/0.0.1440.900/3360.52.1344.756/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609432662891" />
     <state width="1878" height="387" key="GridCell.Tab.0.right/0.23.1440.877/3360.75.1344.733/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609432630411" />
+    <state width="1878" height="387" key="GridCell.Tab.0.right/2166.1080.1194.834/0.0.1440.900/3360.0.1600.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1609510901522" />
     <state width="1878" height="387" key="GridCell.Tab.0.right/2166.1103.1194.811/0.23.1440.877/3360.23.1600.877/1440.0.1920.1080@1440.0.1920.1080" timestamp="1609506065212" />
     <state width="1878" height="387" key="GridCell.Tab.1.bottom" timestamp="1609506065216">
       <screen x="1440" y="0" width="1920" height="1080" />
@@ -300,9 +314,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/laravel-vue-app/resources/js/pages/Login.vue</url>
-          <line>26</line>
-          <properties lambdaOrdinal="-1" />
+          <line>27</line>
           <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/Auth/Api/LoginController.php</url>
+          <line>11</line>
+          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
