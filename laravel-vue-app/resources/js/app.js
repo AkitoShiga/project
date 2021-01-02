@@ -30,11 +30,11 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-new Vue({
+const vuee = new Vue({
     el: '#app',
     router,
     store,
     components: { App },
     template: '<App />',
-    render: h => h(App)
+    render: h => h(App),
 });

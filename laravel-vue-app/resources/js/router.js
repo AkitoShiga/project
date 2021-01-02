@@ -16,16 +16,19 @@ const routes = [
     path: '/',
     component: Shift,
     name: 'Shift',
+    meta: { authOnly: true }
   },
   {
     path: '/Login',
     component: Login,
     name: 'Login',
+    meta: { guestOnly: true },
   },
   {
     path: '/Resister',
     component: Register,
     name: 'Register',
+    meta: { guestOnly: true },
   },
 ]
 

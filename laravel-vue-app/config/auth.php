@@ -15,6 +15,7 @@ return [
 
     'defaults' => [
         'guard' => 'web',
+        //'guard' => 'api',
         'passwords' => 'users',
     ],
 
@@ -46,6 +47,13 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+        /*
+        'airlock' => [
+            'driver' => 'token',
+            'provider' => 'users',
+            'hash' => false,
+        ],
+        */
     ],
 
     /*

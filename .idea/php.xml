@@ -111,6 +111,7 @@
       <path value="$PROJECT_DIR$/laravel-vue-app/vendor/phpunit/php-text-template" />
       <path value="$PROJECT_DIR$/laravel-vue-app/vendor/phpunit/php-code-coverage" />
       <path value="$PROJECT_DIR$/laravel-vue-app/vendor/barryvdh/laravel-cors" />
+      <path value="$PROJECT_DIR$/laravel-vue-app/vendor/laravel/airlock" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />

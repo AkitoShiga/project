@@ -21,7 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 */
 
-Route::group(['middleware' => ['auth:airlock']], function() {
+Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('user', function(Request $request) {
         return response()->json(['user' => $request->user()]);
     });

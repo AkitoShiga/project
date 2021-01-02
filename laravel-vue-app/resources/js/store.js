@@ -4,12 +4,10 @@ import Axios from 'axios'
 Vue.use(Vuex)
 const state = {
     user:null,
-    token:window.localStorage.getItem('token')
+    token:window.localStorage.getItem('token'),
 }
 const actions = {
     login(context, data) {
-        let url = '127.0.0.1:8000/api/login';
-        let url2 = 'localhost:8000';
         let url3 = '/api/login';
         axios.post(url3, data).then((result)=> {
             context.commit("setUser", result.data.user);
@@ -27,16 +25,8 @@ const actions = {
             console.log(`Error! HTTP Status: ${error}`, error.response.data);
         });
     },
-}
-const mutations = {
-    setUser(state, user) {
-        state.user = user;
-    },
-    setToken(state, token) {
-        window.localStorage.setItem('token', token);
-    },
     logout(context) {
-        axios.post(BASE_URL + 'api/logout', null, {
+        axios.post('/api/logout', state.user, {
             headers: {
                 Authrization: `Bearer ${state.token}`,
             }
@@ -44,8 +34,22 @@ const mutations = {
             context.commit("setUser", null);
             context.commit("setToken", null);
         }).catch(error => {
-            console.log(`Error! HTTP Status: ${error}`, error.response.data);
+            console.log(`Error! HTTPsymotion-overwin-f2) Status: ${error}`, error.response.data);
         });
+    },
+    check(context){
+        console.log("(state.token)" + state.token);
+        console.log("(localStorage)" + window.localStorage.getItem('token'));
+        console.log("(state.user)" + state.user);
+    }
+}
+const mutations = {
+   setUser(state, user) {
+        state.user = user;
+    },
+   setToken(state, token) {
+       state.token = token;
+           window.localStorage.setItem('token', token);
     },
 }
 const store = new Vuex.Store({
