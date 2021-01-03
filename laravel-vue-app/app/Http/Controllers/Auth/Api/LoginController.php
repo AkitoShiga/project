@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;//ここでエラーでそう
 use App\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;

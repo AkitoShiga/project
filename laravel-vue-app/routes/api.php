@@ -2,8 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+/*
 use App\Http\Controllers\Auth\Api\LoginController;
 use App\Http\Controllers\Auth\Api\RegisterController;
+*/
+use App\Http\Controllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +23,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 */
-
+/*
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('user', function(Request $request) {
         return response()->json(['user' => $request->user()]);
@@ -30,3 +33,9 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
 Route::post('register', [RegisterController::class, 'register'])->name('api.register');
 Route::post('login', [LoginController::class, 'login'])->name('api.login');
+*/
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout']);

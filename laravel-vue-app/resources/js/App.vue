@@ -3,11 +3,8 @@
     <main>
       <div class="container">
           <router-view></router-view>
-        <router-link :to="{ name: 'Shift'}">Shift</router-link>
-        <router-link :to="{ name: 'Login'}">Login</router-link>
-        <router-link :to="{ name: 'Register'}">Register</router-link>
-      <button v-on:click="logout">ログアウト</button>
-          <button v-on:click="check">check</button>
+        <router-link :to="{ name: 'shift'}">Shift</router-link>
+        <router-link :to="{ name: 'login'}">Login</router-link>
       </div>
       <div>
           <h1>{{this.$store.state.test}}</h1>
@@ -18,15 +15,6 @@
 <script>
 export default {
   name: "App",
-  components: {},
-  methods: {
-    logout() {
-      this.$store.dispatch("logout")
-      },
-      check() {
-        this.$store.dispatch("check")
-      }
-    }
 }
 </script>
 
