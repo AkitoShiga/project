@@ -5,6 +5,7 @@ Vue.use(VueRouter);
 
 import login from "./components/login.vue";
 import shift from "./components/shift.vue";
+import master from "./components/master.vue";
 
 const router = new VueRouter({
     mode: "history",
@@ -19,6 +20,12 @@ const router = new VueRouter({
             path: "/shift",
             name: "shift",
             component: shift,
+            meta: { authOnly: true }
+        },
+        {
+            path: "/master",
+            name: "master",
+            component: master,
             meta: { authOnly: true }
         }
     ]

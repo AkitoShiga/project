@@ -10,6 +10,7 @@
     "watch-poll": "npm run watch -- --watch-poll"
   },
   "dependencies": {
+    "bootstrap-vue": "^2.21.2",
     "deepmerge": "^4.2.2",
     "vue-router": "^3.4.9",
     "vuetify": "^2.2.11",

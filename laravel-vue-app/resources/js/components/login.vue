@@ -42,7 +42,7 @@ export default {
                     .then(response => {
                         console.log(response);
                         localStorage.setItem("auth", "ture");
-                        this.$router.push("/about");
+                        this.$router.push("/shift");
                     })
                     .catch(error => {
                         this.errors = error.response.data.errors;

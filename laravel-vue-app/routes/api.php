@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\Api\LoginController;
 use App\Http\Controllers\Auth\Api\RegisterController;
 */
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MemberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,5 +38,8 @@ Route::post('login', [LoginController::class, 'login'])->name('api.login');
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('/getMembers', [MemberController::class, 'getMembers']);
+Route::post('/deleteMembers', [MemberController::class, 'deleteMembers']);
+Route::get('/deleteMembers', [MemberController::class, 'deleteMembers']);
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout']);

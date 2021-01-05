@@ -1,7 +1,6 @@
 <template>
     <div>
-        <p>{{ user.name }}</p>
-        <p>{{ user.email }}</p>
+        <h1>シフト</h1>
         <button type="button" @click="logout">ログアウト</button>
     </div>
 </template>
@@ -16,6 +15,7 @@ export default {
     mounted() {
         axios.get("/api/user").then(response => {
             this.user = response.data;
+            console.log(this.data);
         });
     },
     methods: {

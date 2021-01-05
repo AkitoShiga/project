@@ -2,18 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="65afd44c-2bcd-4739-9f48-20ffe93fed1b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/my-application.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/my-application.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/config/app.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/config/app.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/config/auth.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/config/auth.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/public/mix-manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/App.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/store.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/routes/api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/shift.vue" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/shift.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/router.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

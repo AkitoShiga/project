@@ -4,6 +4,7 @@
       <div class="container">
           <router-view></router-view>
         <router-link :to="{ name: 'shift'}">Shift</router-link>
+        <router-link :to="{ name: 'master'}">master</router-link>
         <router-link :to="{ name: 'login'}">Login</router-link>
       </div>
       <div>
