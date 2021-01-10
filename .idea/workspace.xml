@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="65afd44c-2bcd-4739-9f48-20ffe93fed1b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/config/sanctum.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/config/sanctum.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/App.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/login.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/shift.vue" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/shift.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/public/js/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/public/js/router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/routes/api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -314,6 +317,11 @@
     <state x="1909" y="94" key="SettingsEditor/0.0.1440.900/3360.52.1344.756/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609432461163" />
     <state x="1909" y="94" key="SettingsEditor/0.23.1440.877/3360.75.1344.733/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609433278086" />
     <state x="1909" y="179" key="SettingsEditor/2166.1080.1194.834/0.0.1440.900/3360.0.1600.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1609469349622" />
+    <state x="1903" y="239" width="672" height="678" key="search.everywhere.popup" timestamp="1610270639223">
+      <screen x="1280" y="0" width="1920" height="1080" />
+    </state>
+    <state x="1903" y="239" width="672" height="678" key="search.everywhere.popup/2166.1080.1194.834/3200.0.1600.900/0.0.1280.800/1280.0.1920.1080@1280.0.1920.1080" timestamp="1610270639223" />
+    <state x="1903" y="239" width="672" height="678" key="search.everywhere.popup/2166.1103.1194.811/3200.23.1600.877/0.23.1280.777/1280.23.1920.1057@1280.23.1920.1057" timestamp="1610268522571" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

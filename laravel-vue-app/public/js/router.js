@@ -285,6 +285,7 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get("/api/user").then(function (response) {
       _this.user = response.data;
+      console.log(_this.data);
     });
   },
   methods: {

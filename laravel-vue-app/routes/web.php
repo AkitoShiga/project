@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 //Auth::routes(['register' => false]);//デフォルトのアカウント登録機能のOFF
 Route::get('{any?}', function () {
     return view('index');
-})->where('any', '.*');
+})->where('any', '.*')->name('login');
 
 Route::post('/deleteMembers', [MemberController::class, 'deleteMembers']);
 /*

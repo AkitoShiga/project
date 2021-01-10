@@ -15,7 +15,7 @@
 		    <tr v-for="member in this.members" v-bind:key="member.id">
             <td>{{member.id}}</td>
 			<td>{{member.sei}}</td>
-			<td>{{member.mei}}</td>
+			//<td>{{member.mei}}</td>
             <td><button class="btn btn-danger" v-on:click="deleteMember(member.id)">削除</button></td>
             </tr>
           </tbody>
