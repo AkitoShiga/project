@@ -191,6 +191,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -201,45 +202,48 @@ __webpack_require__.r(__webpack_exports__);
       delete_member: {
         id: 1
       },
-      members: {}
+      members: []
     };
   },
   mounted: function mounted() {
-    var _this = this;
-
-    var self = this;
-    axios.get("/api/getMembers").then(function (response) {
-      _this.members = response.data;
-      console.log(self.members);
-      console.log('hoihoiho');
-    });
-    axios.get("/api/user").then(function (response) {
-      self.user = response.data;
-    });
+    this.getMembers();
   },
   methods: {
+    getMembers: function getMembers() {
+      var _this = this;
+
+      var self = this;
+      axios.get("/api/getMembers").then(function (response) {
+        _this.members = response.data;
+        console.log(self.members);
+        console.log('hoihoiho');
+      });
+    },
     deleteMember: function deleteMember(deleteId) {
       var data = {
         id: deleteId
       };
-      axios.post("api/deleteMembers", data).then(function (response) {
+      axios.post("/api/deleteMembers", data).then(function (response) {
         console.log(response.message);
       });
-      this.$router.go({
-        path: this.$router.currrentRoute.path,
-        force: true
-      });
+      this.members = [];
+      this.getMembers();
     },
-    addMember: function addMember() {
+    addMembers: function addMembers() {
       var data = {
         sei: this.add_member.sei,
         mei: this.add_member.mei
       };
-      axios.post("api/add_menber", data);
-      this.$router.go({
-        path: this.$router.currentRoute.path,
-        force: true
+      console.log('hooooooooooo');
+      axios.get("/sanctum/csrf-cookie").then(function (response) {
+        axios.post("/api/addMembers", data).then(function (response) {
+          console.log(response.message);
+        })["catch"](function (error) {
+          console.log(error);
+        });
       });
+      this.members = [];
+      this.getMembers();
     },
     logout: function logout() {
       var _this2 = this;
@@ -274,21 +278,64 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      user: ""
+      user: "",
+      thisMonth: "",
+      drawMonth: "",
+      scheduleTable: [],
+      workingTable: []
     };
   },
   mounted: function mounted() {
-    var _this = this;
-
-    axios.get("/api/user").then(function (response) {
-      _this.user = response.data;
-      console.log(_this.data);
-    });
+    var d = new Date();
+    this.thisMonth = d;
+    var thisYear = d.getFullYear();
+    var thisMonth = d.getMonth() + 1;
+    this.drawMonth = thisYear + '年' + thisMonth + '月';
+    this.getSchedule();
   },
   methods: {
+    getSchedule: function getSchedule() {
+      var _this = this;
+
+      axios.get("/api/user").then(function (response) {
+        axios.post("/api/getSchedule/").then(function (response) {
+          if (!response.data) {
+            _this.makeSchedule();
+          }
+
+          _this.scheduleTable = response.data;
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      });
+    },
+    drawSchedule: function drawSchedule() {},
+    drawWorkingTable: function drawWorkingTable() {},
+    noticeHardWork: function noticeHardWork() {},
+    makeSchedule: function makeSchedule() {},
+    changeMonth: function changeMonth(valueMonth) {
+      var d = this.thisMonth;
+      d.setMonth(d.getMonth() + valueMonth);
+      var thisYear = d.getFullYear();
+      var thisMonth = d.getMonth() + 1;
+      this.thisMonth = d;
+      this.drawMonth = thisYear + '年' + thisMonth + '月';
+    },
     logout: function logout() {
       var _this2 = this;
 
@@ -911,28 +958,30 @@ var render = function() {
         _c(
           "tbody",
           _vm._l(this.members, function(member) {
-            return _c("tr", { key: member.id }, [
-              _c("td", [_vm._v(_vm._s(member.id))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(member.sei))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(member.mei))]),
-              _vm._v(" "),
-              _c("td", [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-danger",
-                    on: {
-                      click: function($event) {
-                        return _vm.deleteMember(member.id)
-                      }
-                    }
-                  },
-                  [_vm._v("削除")]
-                )
-              ])
-            ])
+            return member.is_deleted == 0
+              ? _c("tr", { key: member.id }, [
+                  _c("td", [_vm._v(_vm._s(member.id))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(member.sei))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(member.mei))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger",
+                        on: {
+                          click: function($event) {
+                            return _vm.deleteMember(member.id)
+                          }
+                        }
+                      },
+                      [_vm._v("削除")]
+                    )
+                  ])
+                ])
+              : _vm._e()
           }),
           0
         )
@@ -944,7 +993,7 @@ var render = function() {
           on: {
             submit: function($event) {
               $event.preventDefault()
-              return _vm.addMenber($event)
+              return _vm.addMembers($event)
             }
           }
         },
@@ -956,18 +1005,18 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.sei,
-                expression: "sei"
+                value: _vm.add_member.sei,
+                expression: "add_member.sei"
               }
             ],
             attrs: { type: "text", placeholder: "姓" },
-            domProps: { value: _vm.sei },
+            domProps: { value: _vm.add_member.sei },
             on: {
               input: function($event) {
                 if ($event.target.composing) {
                   return
                 }
-                _vm.sei = $event.target.value
+                _vm.$set(_vm.add_member, "sei", $event.target.value)
               }
             }
           }),
@@ -977,23 +1026,45 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.mei,
-                expression: "mei"
+                value: _vm.add_member.mei,
+                expression: "add_member.mei"
               }
             ],
             attrs: { type: "text", placeholder: "名" },
-            domProps: { value: _vm.mei },
+            domProps: { value: _vm.add_member.mei },
             on: {
               input: function($event) {
                 if ($event.target.composing) {
                   return
                 }
-                _vm.mei = $event.target.value
+                _vm.$set(_vm.add_member, "mei", $event.target.value)
               }
             }
           }),
           _vm._v(" "),
-          _c("b-button", [_vm._v("追加")])
+          _c(
+            "b-button",
+            {
+              on: {
+                click: function($event) {
+                  if (
+                    !$event.type.indexOf("key") &&
+                    _vm._k(
+                      $event.keyCode,
+                      "preivent",
+                      undefined,
+                      $event.key,
+                      undefined
+                    )
+                  ) {
+                    return null
+                  }
+                  return _vm.addMembers($event)
+                }
+              }
+            },
+            [_vm._v("追加")]
+          )
         ],
         1
       ),
@@ -1049,7 +1120,40 @@ var render = function() {
     _vm._v(" "),
     _c("button", { attrs: { type: "button" }, on: { click: _vm.logout } }, [
       _vm._v("ログアウト")
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { attrs: { id: "month" } },
+      [
+        _c(
+          "b-button",
+          {
+            on: {
+              click: function($event) {
+                return _vm.changeMonth(-1)
+              }
+            }
+          },
+          [_vm._v("前月")]
+        ),
+        _vm._v(" "),
+        _c("label", [_vm._v(_vm._s(this.drawMonth))]),
+        _vm._v(" "),
+        _c(
+          "b-button",
+          {
+            on: {
+              click: function($event) {
+                return _vm.changeMonth(1)
+              }
+            }
+          },
+          [_vm._v("次月")]
+        )
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = []

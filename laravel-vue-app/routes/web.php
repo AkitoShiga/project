@@ -19,10 +19,3 @@ Route::get('{any?}', function () {
     return view('index');
 })->where('any', '.*')->name('login');
 
-Route::post('/deleteMembers', [MemberController::class, 'deleteMembers']);
-/*
-Route::get('/', function () {
-    return view('welcome');
-});
-*/
-//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

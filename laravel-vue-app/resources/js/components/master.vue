@@ -12,19 +12,20 @@
                     </tr>
                 </thead>
           <tbody >
-		    <tr v-for="member in this.members" v-bind:key="member.id">
+		   <tr v-for="member in this.members" v-bind:key="member.id" v-if="member.is_deleted == 0" >
+
             <td>{{member.id}}</td>
 			<td>{{member.sei}}</td>
-			//<td>{{member.mei}}</td>
+			<td>{{member.mei}}</td>
             <td><button class="btn btn-danger" v-on:click="deleteMember(member.id)">削除</button></td>
             </tr>
           </tbody>
         </table>
-        <form @submit.prevent="addMenber">
+        <form @submit.prevent="addMembers">
             <h2>メンバーの追加</h2>
-            <input type="text" v-model="sei" placeholder="姓">
-            <input type="text" v-model="mei" placeholder="名">
-            <b-button>追加</b-button>
+            <input type="text" v-model="add_member.sei" placeholder="姓">
+            <input type="text" v-model="add_member.mei" placeholder="名">
+            <b-button @click.preivent="addMembers">追加</b-button>
         </form>
         <b-button type="button" @click="logout">ログアウト</b-button>
     </div>
@@ -41,39 +42,48 @@ export default {
             delete_member :{
                 id:1,
             },
-            members:{},
+            members:[],
         };
     },
     mounted() {
-        var self = this;
-        axios.get("/api/getMembers").then(response => {
-            this.members = response.data;
-            console.log(self.members);
-            console.log('hoihoiho');
-            });
-        axios.get("/api/user").then(response => {
-            self.user = response.data;
-        });
+        this.getMembers();
     },
     methods: {
-
+        getMembers() {
+            var self = this;
+            axios.get("/api/getMembers").then(response => {
+                this.members = response.data;
+                console.log(self.members);
+                console.log('hoihoiho');
+            });
+        },
         deleteMember(deleteId) {
+
             let data = {
                 id: deleteId
             }
-            axios.post("api/deleteMembers", data).then(response => {
+            axios.post("/api/deleteMembers", data).then(response => {
                 console.log(response.message);
             });
-            this.$router.go({path: this.$router.currrentRoute.path, force:true});
+            this.members = [];
+            this.getMembers();
 
         },
-        addMember() {
+        addMembers() {
             let data = {
                 sei: this.add_member.sei,
                 mei: this.add_member.mei,
             }
-            axios.post("api/add_menber",data);
-            this.$router.go({path: this.$router.currentRoute.path, force:true});
+            console.log('hooooooooooo');
+            axios.get("/sanctum/csrf-cookie").then(response => {
+                axios.post("/api/addMembers", data).then(response => {
+                    console.log(response.message);
+                }).catch(error => {
+                    console.log(error);
+                });
+            });
+            this.members = [];
+            this.getMembers();
         },
         logout() {
             axios
