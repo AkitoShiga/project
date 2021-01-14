@@ -6,14 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="65afd44c-2bcd-4739-9f48-20ffe93fed1b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/MemberController.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/MemberController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/app/Models/Member.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/app/Models/Member.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/public/js/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/public/js/router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/master.vue" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/master.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/shift.vue" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/shift.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/routes/api.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,6 +198,7 @@
       <updated>1609428085734</updated>
       <workItem from="1609428087394" duration="12265000" />
       <workItem from="1609510837323" duration="9211000" />
+      <workItem from="1610598017495" duration="340000" />
     </task>
     <servers />
   </component>
