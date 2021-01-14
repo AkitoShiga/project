@@ -10,3 +10,4 @@ class Shift extends Model
     use HasFactory;
     protected $fillable = ['start_at', 'end_at'];
 }
+

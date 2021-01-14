@@ -6,6 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="65afd44c-2bcd-4739-9f48-20ffe93fed1b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/ScheduleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/ScheduleController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/app/Models/Schedule.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/app/Models/Schedule.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/app/Models/Shift.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/app/Models/Shift.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/public/js/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/public/js/router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/shift.vue" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/shift.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,7 +204,8 @@
       <updated>1609428085734</updated>
       <workItem from="1609428087394" duration="12265000" />
       <workItem from="1609510837323" duration="9211000" />
-      <workItem from="1610598017495" duration="340000" />
+      <workItem from="1610598017495" duration="635000" />
+      <workItem from="1610604139459" duration="7053000" />
     </task>
     <servers />
   </component>
@@ -313,6 +320,14 @@
     <state x="1909" y="94" key="SettingsEditor/0.0.1440.900/3360.52.1344.756/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609432461163" />
     <state x="1909" y="94" key="SettingsEditor/0.23.1440.877/3360.75.1344.733/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609433278086" />
     <state x="1909" y="179" key="SettingsEditor/2166.1080.1194.834/0.0.1440.900/3360.0.1600.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1609469349622" />
+    <state x="2037" y="116" key="VCS.ChangeListViewerDialog" timestamp="1610630077864">
+      <screen x="1280" y="-127" width="1920" height="1080" />
+    </state>
+    <state x="2037" y="116" key="VCS.ChangeListViewerDialog/1666.953.1194.834/0.0.1280.800/3200.-42.1600.900/1280.-127.1920.1080@1280.-127.1920.1080" timestamp="1610630077864" />
+    <state x="1904" y="191" key="run.anything.popup" timestamp="1610628512857">
+      <screen x="1280" y="-127" width="1920" height="1080" />
+    </state>
+    <state x="1904" y="191" key="run.anything.popup/1666.953.1194.834/0.0.1280.800/3200.-42.1600.900/1280.-127.1920.1080@1280.-127.1920.1080" timestamp="1610628512857" />
     <state x="1903" y="239" width="672" height="678" key="search.everywhere.popup" timestamp="1610354639170">
       <screen x="1280" y="0" width="1920" height="1080" />
     </state>

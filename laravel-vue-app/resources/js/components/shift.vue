@@ -40,8 +40,13 @@ export default {
     },
     methods: {
         getSchedule(){
+            var d = this.thisMonth;
+            var e = d.getFullYear() + '-' + (d.getMonth() + 1);
+            var data = {
+               thisMonth: e,
+            };
             axios.get("/api/user").then(response => {
-                axios.post("/api/getSchedule/").then(response => {
+                axios.post("/api/getSchedule/", data ).then(response => {
                     if( !response.data )
                     {
                        this.makeSchedule();

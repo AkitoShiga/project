@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Schedule extends Model
 {
     use HasFactory;
-    protercted protected $fillable = [''];
+    protected $fillable = ['shit_date'];
 }

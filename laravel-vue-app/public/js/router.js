@@ -312,8 +312,13 @@ __webpack_require__.r(__webpack_exports__);
     getSchedule: function getSchedule() {
       var _this = this;
 
+      var d = this.thisMonth;
+      var e = d.getFullYear() + '-' + (d.getMonth() + 1);
+      var data = {
+        thisMonth: e
+      };
       axios.get("/api/user").then(function (response) {
-        axios.post("/api/getSchedule/").then(function (response) {
+        axios.post("/api/getSchedule/", data).then(function (response) {
           if (!response.data) {
             _this.makeSchedule();
           }
