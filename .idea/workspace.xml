@@ -6,12 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="65afd44c-2bcd-4739-9f48-20ffe93fed1b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/ScheduleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/ScheduleController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/app/Models/Schedule.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/app/Models/Schedule.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/app/Models/Shift.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/app/Models/Shift.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/public/js/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/public/js/router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/shift.vue" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/shift.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -205,7 +199,8 @@
       <workItem from="1609428087394" duration="12265000" />
       <workItem from="1609510837323" duration="9211000" />
       <workItem from="1610598017495" duration="635000" />
-      <workItem from="1610604139459" duration="7053000" />
+      <workItem from="1610604139459" duration="7485000" />
+      <workItem from="1610669355748" duration="858000" />
     </task>
     <servers />
   </component>
