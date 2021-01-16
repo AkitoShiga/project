@@ -294,7 +294,9 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       user: "",
+      thisDateTime: "",
       thisMonth: "",
+      thisYear: "",
       drawMonth: "",
       scheduleTable: [],
       workingTable: []
@@ -302,20 +304,19 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     var d = new Date();
-    this.thisMonth = d;
-    var thisYear = d.getFullYear();
-    var thisMonth = d.getMonth() + 1;
-    this.drawMonth = thisYear + '年' + thisMonth + '月';
+    this.thisDateTime = d;
+    this.thisYear = d.getFullYear();
+    this.thisMonth = d.getMonth() + 1;
+    this.drawMonth = this.thisYear + '年' + this.thisMonth + '月';
     this.getSchedule();
   },
   methods: {
     getSchedule: function getSchedule() {
       var _this = this;
 
-      var d = this.thisMonth;
-      var e = d.getFullYear() + '-' + (d.getMonth() + 1);
       var data = {
-        thisMonth: e
+        thisYear: this.thisYear,
+        thisMonth: this.thisMonth
       };
       axios.get("/api/user").then(function (response) {
         axios.post("/api/getSchedule/", data).then(function (response) {
@@ -334,12 +335,12 @@ __webpack_require__.r(__webpack_exports__);
     noticeHardWork: function noticeHardWork() {},
     makeSchedule: function makeSchedule() {},
     changeMonth: function changeMonth(valueMonth) {
-      var d = this.thisMonth;
+      var d = this.thisDateTime;
       d.setMonth(d.getMonth() + valueMonth);
-      var thisYear = d.getFullYear();
-      var thisMonth = d.getMonth() + 1;
-      this.thisMonth = d;
-      this.drawMonth = thisYear + '年' + thisMonth + '月';
+      this.thisYear = d.getFullYear();
+      this.thisMonth = d.getMonth() + 1;
+      this.drawMonth = this.thisYear + '年' + this.thisMonth + '月';
+      this.getSchedule(); //hoiho;
     },
     logout: function logout() {
       var _this2 = this;

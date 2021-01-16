@@ -22,28 +22,29 @@ export default {
     data()
     {
         return {
-            user:         "",
-            thisMonth:    "",
-            drawMonth:    "",
-            scheduleTable:   [],
-            workingTable: [],
+            user:          "",
+            thisDateTime:  "",
+            thisMonth:     "",
+            thisYear:      "",
+            drawMonth:     "",
+            scheduleTable: [],
+            workingTable:  [],
         };
     },
     mounted()
     {
-        let d          = new Date();
-        this.thisMonth = d;
-        var thisYear   = d.getFullYear();
-        var thisMonth  = d.getMonth()+1;
-        this.drawMonth = thisYear + '年' + thisMonth + '月';
+        let d              = new Date();
+        this.thisDateTime = d;
+        this.thisYear       = d.getFullYear();
+        this.thisMonth      = d.getMonth()+1;
+        this.drawMonth     = this.thisYear + '年' + this.thisMonth + '月';
         this.getSchedule();
     },
     methods: {
         getSchedule(){
-            var d = this.thisMonth;
-            var e = d.getFullYear() + '-' + (d.getMonth() + 1);
             var data = {
-               thisMonth: e,
+                thisYear:  this.thisYear,
+                thisMonth: this.thisMonth,
             };
             axios.get("/api/user").then(response => {
                 axios.post("/api/getSchedule/", data ).then(response => {
@@ -63,12 +64,13 @@ export default {
         noticeHardWork(){},
         makeSchedule(){},
         changeMonth(valueMonth){
-            var d = this.thisMonth;
+            var d = this.thisDateTime;
             d.setMonth(d.getMonth() + valueMonth);
-            var thisYear  = d.getFullYear();
-            var thisMonth = d.getMonth()+1;
-            this.thisMonth = d;
-            this.drawMonth = thisYear + '年' + thisMonth + '月';
+            this.thisYear  = d.getFullYear();
+            this.thisMonth = d.getMonth()+1;
+            this.drawMonth = this.thisYear + '年' + this.thisMonth + '月';
+            this.getSchedule();
+            //hoiho;
         },
         logout() {
             axios
