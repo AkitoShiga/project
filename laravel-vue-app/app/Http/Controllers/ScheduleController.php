@@ -135,7 +135,7 @@ class ScheduleController extends Controller
     function convertFormat($data) {}
     function getSchedule(Request $request) {
         $schedule = new Schedule;
-        // 日数を出す関数として分離させる;
+         //日数を出す関数として分離させる;
         $year  = $request->input('thisYear');
         $month = $request->input('thisMonth');
         $endDay = self::getEndDay($year, $month);
