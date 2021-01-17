@@ -7,9 +7,6 @@
     <list default="true" id="65afd44c-2bcd-4739-9f48-20ffe93fed1b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/ScheduleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/ScheduleController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/public/js/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/public/js/router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/shift.vue" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/resources/js/components/shift.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,7 +172,7 @@
     <configuration name="Laravel" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
       <method v="2" />
     </configuration>
-    <configuration name="Laravel" type="PhpRemoteDebugRunConfigurationType" factoryName="PHP Remote Debug" filter_connections="FILTER" server_name="Laravel" session_id="PHPSTORM">
+    <configuration name="Laravel" type="PhpRemoteDebugRunConfigurationType" factoryName="PHP Remote Debug" filter_connections="FILTER" server_name="Laravel" session_id="PHPStorm">
       <method v="2" />
     </configuration>
     <list>
@@ -205,7 +202,8 @@
       <workItem from="1610598017495" duration="635000" />
       <workItem from="1610604139459" duration="7485000" />
       <workItem from="1610669355748" duration="858000" />
-      <workItem from="1610796950046" duration="6076000" />
+      <workItem from="1610796950046" duration="8746000" />
+      <workItem from="1610842900387" duration="20595000" />
     </task>
     <servers />
   </component>
@@ -217,10 +215,11 @@
       <screen x="1440" y="-85" width="1920" height="1080" />
     </state>
     <state x="1988" y="136" key="#CLI_Interpreters/0.23.1440.877/3360.75.1344.733/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609432581982" />
-    <state x="2091" y="205" width="1071" height="852" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1609469393843">
-      <screen x="1440" y="0" width="1920" height="1080" />
+    <state x="1931" y="78" width="1071" height="852" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1610898340910">
+      <screen x="1280" y="-127" width="1920" height="1080" />
     </state>
     <state x="2091" y="120" width="1071" height="852" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900/3360.52.1344.756/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609433120165" />
+    <state x="1931" y="78" key="#com.intellij.execution.impl.EditConfigurationsDialog/1666.953.1194.834/3200.-42.1600.900/0.0.1280.800/1280.-127.1920.1080@1280.-127.1920.1080" timestamp="1610898340910" />
     <state x="2091" y="205" key="#com.intellij.execution.impl.EditConfigurationsDialog/2166.1103.1194.811/0.23.1440.877/3360.23.1600.877/1440.0.1920.1080@1440.0.1920.1080" timestamp="1609469393843" />
     <state x="2187" y="205" key="#com.intellij.ide.macro.MacrosDialog" timestamp="1609432973146">
       <screen x="1440" y="-85" width="1920" height="1080" />
@@ -314,25 +313,29 @@
     <state width="1878" height="387" key="GridCell.Tab.2.right/0.23.1440.877/3360.75.1344.733/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609432630164" />
     <state width="1878" height="387" key="GridCell.Tab.2.right/2166.1080.1194.834/0.0.1440.900/3360.0.1600.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1609593478595" />
     <state width="1878" height="387" key="GridCell.Tab.2.right/2166.1103.1194.811/0.23.1440.877/3360.23.1600.877/1440.0.1920.1080@1440.0.1920.1080" timestamp="1609506065219" />
-    <state x="1909" y="179" key="SettingsEditor" timestamp="1609469349622">
-      <screen x="1440" y="0" width="1920" height="1080" />
+    <state x="1749" y="52" key="SettingsEditor" timestamp="1610898319488">
+      <screen x="1280" y="-127" width="1920" height="1080" />
     </state>
     <state x="1909" y="94" key="SettingsEditor/0.0.1440.900/3360.52.1344.756/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609432461163" />
     <state x="1909" y="94" key="SettingsEditor/0.23.1440.877/3360.75.1344.733/1440.-85.1920.1080@1440.-85.1920.1080" timestamp="1609433278086" />
+    <state x="1749" y="52" key="SettingsEditor/1666.953.1194.834/3200.-42.1600.900/0.0.1280.800/1280.-127.1920.1080@1280.-127.1920.1080" timestamp="1610898319488" />
     <state x="1909" y="179" key="SettingsEditor/2166.1080.1194.834/0.0.1440.900/3360.0.1600.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1609469349622" />
     <state x="2037" y="116" key="VCS.ChangeListViewerDialog" timestamp="1610630077864">
       <screen x="1280" y="-127" width="1920" height="1080" />
     </state>
     <state x="2037" y="116" key="VCS.ChangeListViewerDialog/1666.953.1194.834/0.0.1280.800/3200.-42.1600.900/1280.-127.1920.1080@1280.-127.1920.1080" timestamp="1610630077864" />
-    <state x="1904" y="207" key="run.anything.popup" timestamp="1610797441673">
-      <screen x="1280" y="-104" width="1920" height="1057" />
+    <state x="1904" y="191" key="run.anything.popup" timestamp="1610889018454">
+      <screen x="1280" y="-127" width="1920" height="1080" />
     </state>
     <state x="1904" y="191" key="run.anything.popup/1666.953.1194.834/0.0.1280.800/3200.-42.1600.900/1280.-127.1920.1080@1280.-127.1920.1080" timestamp="1610628512857" />
+    <state x="1904" y="191" key="run.anything.popup/1666.953.1194.834/3200.-42.1600.900/0.0.1280.800/1280.-127.1920.1080@1280.-127.1920.1080" timestamp="1610889018454" />
     <state x="3720" y="223" key="run.anything.popup/1666.953.1194.834/3200.-42.1600.900/0.0.1280.800/1280.-127.1920.1080@3200.-42.1600.900" timestamp="1610796961686" />
     <state x="1904" y="207" key="run.anything.popup/1666.976.1194.811/3200.-19.1600.877/0.23.1280.777/1280.-104.1920.1057@1280.-104.1920.1057" timestamp="1610797441673" />
-    <state x="1903" y="239" width="672" height="678" key="search.everywhere.popup" timestamp="1610354639170">
-      <screen x="1280" y="0" width="1920" height="1080" />
+    <state x="1903" y="112" width="672" height="679" key="search.everywhere.popup" timestamp="1610889400258">
+      <screen x="1280" y="-127" width="1920" height="1080" />
     </state>
+    <state x="1903" y="112" width="672" height="679" key="search.everywhere.popup/1666.953.1194.834/3200.-42.1600.900/0.0.1280.800/1280.-127.1920.1080@1280.-127.1920.1080" timestamp="1610889400258" />
+    <state x="1903" y="130" width="672" height="664" key="search.everywhere.popup/1666.976.1194.811/3200.-19.1600.877/0.23.1280.777/1280.-104.1920.1057@1280.-104.1920.1057" timestamp="1610809529795" />
     <state x="1903" y="239" width="672" height="678" key="search.everywhere.popup/2166.1080.1194.834/3200.0.1600.900/0.0.1280.800/1280.0.1920.1080@1280.0.1920.1080" timestamp="1610354639170" />
     <state x="1903" y="239" width="672" height="678" key="search.everywhere.popup/2166.1103.1194.811/3200.23.1600.877/0.23.1280.777/1280.23.1920.1057@1280.23.1920.1057" timestamp="1610268522571" />
   </component>
