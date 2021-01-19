@@ -36,12 +36,13 @@ class ScheduleController extends Controller
         }
         return $day;
     }
-    function makeSchedule($data, $day, $yearMonth) {
-       $Member   = new Member;
+    function makeSchedule($data, $endDay, $yearMonth) {
        $schedule = new Schedule;
-       $members  = $Member->whereIn('is_deleted', [false]);
+       $Member = Member::all();
+       $members  = $Member->whereStrict('is_deleted',0)->values();
+        //$members = $Member->all();
 
-       for($i = 1 ; $i < $day+1; $i++) {
+       for($i = 1 ; $i < $endDay+1; $i++) {
            $shift    = new Shift;
            $shifts = $shift->all();
            $isFilled = false;
@@ -56,13 +57,14 @@ class ScheduleController extends Controller
                $shiftId                    = $shifts[0]['id'];//shiftのIDに入れる。
                $shiftStartAt               = $shifts[0]['start_at'];
                $shiftEndAt                 = $shifts[0]['end_at'];//DBに登録した時にメンバーのlast_worked_atに入れる。
-               foreach ($members as $member) {
+               $memberCount = $members->count();
+               for ($n = 0; $n < $memberCount; $n++) {
                    //最後のシフトから12時間経過しているか
-                   $isShifted           = $member['is_shifted'];
-                   $shiftCount          = $member['shift_count'];
+                   $isShifted           = $members[$n]['is_shifted'];
+                   $shiftCount          = $members[$n]['shift_count'];
                    $isShiftCountLimited = $shiftCount === 6;
                    $isHoursLeft  = false;
-                   $lastWorkedAt = $member['last_worked_at'];
+                   $lastWorkedAt = $members[$n]['last_worked_at'];
                    if($lastWorkedAt == null ) {
                        global $isHoursLeft;
                        $isHoursLeft = true;
@@ -76,60 +78,62 @@ class ScheduleController extends Controller
                        $lastWorkedAt += 12;
                        if ($lastWorkedAt > 23) {
                            global $lastWorkedAt;
-                           $lastWorkedAt = -24;
+                           $lastWorkedAt -= 24;
                        }
-                       $shiftStartAt = substr($shiftStartAt, 0, length, 2);
+                       $shiftStartAt = substr($shiftStartAt, 0, 2);
                        $shiftStartAt += 0;
                        if($shiftStartAt - $lastWorkedAt >= 0){
                           $isHoursLeft = true;
                        }
                    }
                    if(!$isShifted && !$isShiftCountLimited && $isHoursLeft) {
-                       $day = 0;
+                       $today = $i;
                        if($i < 10) {
-                          $day = str_pad($day, 2, 0, STR_PAD_LEFT);
+                          $insertday = str_pad($today, 2, 0, STR_PAD_LEFT);
                        }
-                       $shiftDate = $yearMonth.'-'.$day;
-                       $memberId = $member['id'];
-                       $date = new Date();
+                       $shiftDate = $yearMonth.'-'.$insertday;
+                       $memberId = $members[$n]['member_id'];
+                       $date = date("Y-m-d H:i:s");
                       //member id, shift id, 日付をScheduleに入れる。
                        //dbにシフトの情報を入力する→引っ駆らないために
                        //shiftのIDを入力する
                        $schedule->create([
+
                            'shift_date' => $shiftDate,
                            'shift_id'   => $shiftId,
                            'member_id'  => $memberId,
                            'updated_at' => $date,
                            'created_at' => $date
                        ])->save();
-                       $member['shift_count']++;
-                       $member['last_worked_at'] = $shiftEndAt;
-                       $member['is_shifted'];
-                       break;
+                       $members[$n]['shift_count']   += 1;
+                       $test = $members[$n]['shift_count'];
+                       $members[$n]['last_worked_at'] = $shiftEndAt;
+                       $members[$n]['is_shifted']     = true;
+                      // break;
                    } else {
                       if($isShiftCountLimited) {
-                          $member['is_shifted']     = true;
-                          $member['shift_count']    = 0;
-                          $member['last_worked_at'] = null;
+                          $members[$n]['is_shifted']     = true;
+                          $members[$n]['shift_count']    = 0;
+                          $members[$n]['last_worked_at'] = null;
                       }
-                       continue;
+                       //continue;
                    }
-                   global $members;
+                   $test = $members[$n]['member_id'];
                    $isWorked = true;
-                   foreach($members as $mem){
-                       if(!$mem['is_shifted']) {
+                   for($j = 0; $j < $memberCount; $j++){
+                       if(!$members[$j]['is_shifted']) {
                            $isWorked = false;
                        }
                    }
                }
            }
-           foreach($members as $me){
-               $me['is_shifted'] = false;
+           for($k = 0; $k < $memberCount; $k++){
+               $member[$k]['is_shifted'] = false;
            }
        }
-        $startDay = $yearMonth.'-'.'01';
-        $endDay = $yearMonth.'-'.$day;
-        $data = $schedule->whereBetween('shift_date',[$startDay, $endDay])->get();
+        $shiftStartDay = $yearMonth.'-'.'01';
+        $shiftEndDay = $yearMonth.'-'.$endDay;
+        $data = $schedule->whereBetween('shift_date',[$shiftStartDay, $shiftEndDay])->get();
         return $data;
     }
     function convertFormat($data) {}

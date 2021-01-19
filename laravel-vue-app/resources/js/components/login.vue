@@ -8,7 +8,6 @@
                     {{ errors.email[0] }}
                 </span>
             </div>
-
             <div>
                 <label>パスワード</label>
                 <input type="password" v-model="password" />

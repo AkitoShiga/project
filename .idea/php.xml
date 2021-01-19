@@ -114,7 +114,21 @@
       <path value="$PROJECT_DIR$/laravel-vue-app/vendor/laravel/airlock" />
     </include_path>
   </component>
+  <component name="PhpProjectServersManager">
+    <servers>
+      <server host="dockerhost" id="0003e626-2786-4503-84d3-cb85c9eaa0c2" name="Laravel" port="9003" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$" remote-root="/var/www/html" />
+        </path_mappings>
+      </server>
+    </servers>
+  </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />
+  <component name="PhpStepFilterConfiguration">
+    <skipped_functions>
+      <skipped_function name="App\Http\Controllers\ScheduleController-&gt;makeSchedule" />
+    </skipped_functions>
+  </component>
   <component name="PhpUnit">
     <phpunit_settings>
       <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/laravel-vue-app/vendor/autoload.php" />

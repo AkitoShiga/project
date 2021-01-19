@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Schedule extends Model
 {
     use HasFactory;
-    protected $fillable = ['shit_date'];
+    protected $fillable = ['id', 'shift_date','shift_id', 'member_id'];
 }
