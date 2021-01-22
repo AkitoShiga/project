@@ -47,88 +47,103 @@ class ScheduleController extends Controller
            $shifts = $shift->all();
            $isFilled = false;
            $isWorked = false;
-           while(!$isFilled  && !$isWorked) { //メンバーが全員がfalseかつシフトが足りていたら次の日に進む
+           while(!$isFilled  | !$isWorked) { //メンバーが全員がfalseかつシフトが足りていたら次の日に進む
                $shifts = $shifts->sortByDesc('least_members')->values();
                $max = $shifts->max('least_members');
                if($max < 1){
                     $isFilled = true;
                }
-               $shifts[0]['least_members'] = --$max;
                $shiftId                    = $shifts[0]['id'];//shiftのIDに入れる。
                $shiftStartAt               = $shifts[0]['start_at'];
                $shiftEndAt                 = $shifts[0]['end_at'];//DBに登録した時にメンバーのlast_worked_atに入れる。
                $memberCount = $members->count();
                for ($n = 0; $n < $memberCount; $n++) {
                    //最後のシフトから12時間経過しているか
-                   $isShifted           = $members[$n]['is_shifted'];
-                   $shiftCount          = $members[$n]['shift_count'];
+                   $isShifted = $members[$n]['is_shifted'];
+                   $shiftCount = $members[$n]['shift_count'];
                    $isShiftCountLimited = $shiftCount === 6;
-                   $isHoursLeft  = false;
-                   $lastWorkedAt = $members[$n]['last_worked_at'];
-                   if($lastWorkedAt == null ) {
-                       global $isHoursLeft;
-                       $isHoursLeft = true;
-                   } else {
-                       $lastWorkedAt = substr($lastWorkedAt, 0, 2);
-                       $lastWorkedAt += 0;//phpマジックで数値に変換している。
-                       if ($lastWorkedAt > 23) {
-                           global $lastWorkedAt;
-                           $lastWorkedAt = -24;
+                   if(!$isShifted) {
+                       $isHoursLeft = false;
+                       $lastWorkedAt = $members[$n]['last_worked_at'];
+                       if ($lastWorkedAt == null) {
+                           global $isHoursLeft;
+                           $isHoursLeft = true;
+                       } else {
+                           $lastWorkedAt = substr($lastWorkedAt, 0, 2);
+                           $lastWorkedAt += 0;//phpマジックで数値に変換している。
+                           $shiftStartAt = substr($shiftStartAt, 0, 2);
+                           $shiftStartAt += 24;
+                           $breakTime = $shiftStartAt - $lastWorkedAt;
+                           if($breakTime >= 12) {
+                               $isHoursLeft = true;
+                           }
+                           /*
+                           if ($lastWorkedAt > 23) {
+                               $lastWorkedAt -= 24;
+                           }
+                           $lastWorkedAt += 12;
+                           $shiftStartAt = substr($shiftStartAt, 0, 2);
+                           $shiftStartAt += 0;
+                          if ($lastWorkedAt > 23) {//前日のてっぺん超えても前日の日付扱いなので当日にしている。
+                              $lastWorkedAt -= 24;
+                           }
+                               if ($shiftStartAt - $lastWorkedAt >= 0) {
+                                   $isHoursLeft = true;
+                               }
+                          // }
+                          /* elseif ($lastWorkedAt <= 24) {//前日のシフトから12時間後が日をまたいでいなかったら計算を変える
+                               $lastWorkedAt = 24 - $lastWorkedAt;
+                               if ($lastWorkedAt + $shiftStartAt >= 0) {
+                                   $isHoursLeft = true;
+                               }
+                           }
+                          */
                        }
-                       $lastWorkedAt += 12;
-                       if ($lastWorkedAt > 23) {
-                           global $lastWorkedAt;
-                           $lastWorkedAt -= 24;
-                       }
-                       $shiftStartAt = substr($shiftStartAt, 0, 2);
-                       $shiftStartAt += 0;
-                       if($shiftStartAt - $lastWorkedAt >= 0){
-                          $isHoursLeft = true;
-                       }
-                   }
-                   if(!$isShifted && !$isShiftCountLimited && $isHoursLeft) {
-                       $today = $i;
-                       if($i < 10) {
-                          $insertday = str_pad($today, 2, 0, STR_PAD_LEFT);
-                       }
-                       $shiftDate = $yearMonth.'-'.$insertday;
-                       $memberId = $members[$n]['member_id'];
-                       $date = date("Y-m-d H:i:s");
-                      //member id, shift id, 日付をScheduleに入れる。
-                       //dbにシフトの情報を入力する→引っ駆らないために
-                       //shiftのIDを入力する
-                       $schedule->create([
+                       if (!$isShiftCountLimited && $isHoursLeft) {
+                           $today = $i;
+                           if ($i < 10) {
+                               $insertday = str_pad($today, 2, 0, STR_PAD_LEFT);
+                           }
+                           $shiftDate = $yearMonth . '-' . $insertday;
+                           $memberId = $members[$n]['member_id'];
+                           $date = date("Y-m-d H:i:s");
+                           //member id, shift id, 日付をScheduleに入れる。
+                           //dbにシフトの情報を入力する→引っ駆らないために
+                           //shiftのIDを入力する
+                           $schedule->create([
 
-                           'shift_date' => $shiftDate,
-                           'shift_id'   => $shiftId,
-                           'member_id'  => $memberId,
-                           'updated_at' => $date,
-                           'created_at' => $date
-                       ])->save();
-                       $members[$n]['shift_count']   += 1;
-                       $test = $members[$n]['shift_count'];
-                       $members[$n]['last_worked_at'] = $shiftEndAt;
-                       $members[$n]['is_shifted']     = true;
-                      // break;
-                   } else {
-                      if($isShiftCountLimited) {
-                          $members[$n]['is_shifted']     = true;
-                          $members[$n]['shift_count']    = 0;
-                          $members[$n]['last_worked_at'] = null;
-                      }
-                       //continue;
+                               'shift_date' => $shiftDate,
+                               'shift_id' => $shiftId,
+                               'member_id' => $memberId,
+                               'updated_at' => $date,
+                               'created_at' => $date
+                           ])->save();
+                           $members[$n]['shift_count'] += 1;
+                           $test = $members[$n]['shift_count'];
+                           $members[$n]['last_worked_at'] = $shiftEndAt;
+                           $members[$n]['is_shifted'] = true;
+                           $shifts[0]['least_members'] = --$max;
+                           break;//ここでブレークしないと同じシフトにみんなはいりまくってしまう
+                       } else {
+                           if ($isShiftCountLimited) {
+                               $members[$n]['is_shifted'] = true;
+                               $members[$n]['shift_count'] = 0;
+                               $members[$n]['last_worked_at'] = null;
+                           }
+                           //continue;
+                       }
                    }
-                   $test = $members[$n]['member_id'];
                    $isWorked = true;
                    for($j = 0; $j < $memberCount; $j++){
                        if(!$members[$j]['is_shifted']) {
                            $isWorked = false;
+                           break;
                        }
                    }
                }
            }
            for($k = 0; $k < $memberCount; $k++){
-               $member[$k]['is_shifted'] = false;
+               $members[$k]['is_shifted'] = false;
            }
        }
         $shiftStartDay = $yearMonth.'-'.'01';
