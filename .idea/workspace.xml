@@ -221,7 +221,7 @@
       <workItem from="1611105876451" duration="43000" />
       <workItem from="1611135800813" duration="13905000" />
       <workItem from="1611288504935" duration="1213000" />
-      <workItem from="1611316857124" duration="12452000" />
+      <workItem from="1611316857124" duration="21148000" />
     </task>
     <servers />
   </component>
@@ -426,11 +426,11 @@
       <screen x="1280" y="-127" width="1920" height="1080" />
     </state>
     <state x="1724" y="148" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/1666.953.1194.834/3200.-42.1600.900/0.0.1280.800/1280.-127.1920.1080@1280.-127.1920.1080" timestamp="1611062984728" />
-    <state x="1904" y="191" key="run.anything.popup" timestamp="1611326991982">
+    <state x="1904" y="191" key="run.anything.popup" timestamp="1611403145973">
       <screen x="1280" y="-127" width="1920" height="1080" />
     </state>
     <state x="1904" y="191" key="run.anything.popup/1666.953.1194.834/0.0.1280.800/3200.-42.1600.900/1280.-127.1920.1080@1280.-127.1920.1080" timestamp="1610628512857" />
-    <state x="1904" y="191" key="run.anything.popup/1666.953.1194.834/3200.-42.1600.900/0.0.1280.800/1280.-127.1920.1080@1280.-127.1920.1080" timestamp="1611326991982" />
+    <state x="1904" y="191" key="run.anything.popup/1666.953.1194.834/3200.-42.1600.900/0.0.1280.800/1280.-127.1920.1080@1280.-127.1920.1080" timestamp="1611403145973" />
     <state x="3720" y="223" key="run.anything.popup/1666.953.1194.834/3200.-42.1600.900/0.0.1280.800/1280.-127.1920.1080@3200.-42.1600.900" timestamp="1610796961686" />
     <state x="1904" y="207" key="run.anything.popup/1666.976.1194.811/3200.-19.1600.877/0.23.1280.777/1280.-104.1920.1057@1280.-104.1920.1057" timestamp="1610797441673" />
     <state x="1903" y="112" width="672" height="679" key="search.everywhere.popup" timestamp="1610976166395">
@@ -440,16 +440,5 @@
     <state x="1903" y="130" width="672" height="664" key="search.everywhere.popup/1666.976.1194.811/3200.-19.1600.877/0.23.1280.777/1280.-104.1920.1057@1280.-104.1920.1057" timestamp="1610809529795" />
     <state x="1903" y="239" width="672" height="678" key="search.everywhere.popup/2166.1080.1194.834/3200.0.1600.900/0.0.1280.800/1280.0.1920.1080@1280.0.1920.1080" timestamp="1610354639170" />
     <state x="1903" y="239" width="672" height="678" key="search.everywhere.popup/2166.1103.1194.811/3200.23.1600.877/0.23.1280.777/1280.23.1920.1057@1280.23.1920.1057" timestamp="1610268522571" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/ScheduleController.php</url>
-          <line>141</line>
-          <option name="timeStamp" value="142" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
