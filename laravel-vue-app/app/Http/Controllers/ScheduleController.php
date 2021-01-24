@@ -10,7 +10,8 @@ use App\Models\Shift;
 
 class ScheduleController extends Controller
 {
-    const ORIGIN_ALIGNER  = 1;
+    const ORIGIN_ALIGNER  =  1;
+    const DAYS_ONE_WEEK   =  7;
     const MUST_REST_HOURS = 12;
     const ONE_DAY_HOURS   = 24;
     function getEndDay( $year, $month )
@@ -43,47 +44,48 @@ class ScheduleController extends Controller
         return $day;
     }
 
-    function makeSchedule( $data, $scheduleEndDay, $scheduleYearMonth, $request )
+    function makeSchedule( $scheduleEndDay, $scheduleYearMonth, $request )
     {
         $schedule   = new Schedule;
         $allShifts  = Shift::all();
         $allMembers = Member::all();
         $members    = $allMembers->whereStrict( 'is_deleted', 0 )->values();
+        $membersCount  = $members->count();
         //そもそも人が足りるか計算
         $leastMembers         = $allShifts->sum('least_members' );
         $leastMembersForMonth = 0; //休日を含めて運用可能な最低人数;
-        $daysOneWeek          = 7;
         $daysOff              = 2;
         $daysWork             = 0;
-        $isMemberWillEnough       = false;
+        $isMemberWillEnough   = false;
 
-        for (; $daysOff > 0 && $isMemberWillEnough ; $daysOff-- )
+        for (; $daysOff > 0 && !$isMemberWillEnough ; $daysOff-- )
         {
-            $daysWork             = $daysOneWeek  - $daysOff;
-            $oneCycle             = $daysWork     + 1;//連勤数と休日数に応じてメンバーのシフトのサイクル日数が決まる
-            $oneCycleRemain       = $leastMembers % $oneCycle;
-            $leastMembersForMonth = ( $leastMembers / ( $oneCycle - $daysOff ) ) * $oneCycle +  ( $oneCycleRemain + $daysOff );//グラフで図にしたらこういう漸化式になった。
-
-            if( $members > $leastMembers )
+            $daysWork             = self::DAYS_ONE_WEEK - $daysOff;
+            $oneCycle             = $daysWork + 1;//連勤の制約をクリアできるスケジュールのメンバーのひとかたまり。連勤の制約の中で最大で稼働出来るメンバーは連勤数+1;
+            $oneCycleRemain       = $leastMembers % ( $oneCycle - $daysOff );
+            $leastMembersForMonth = floor(( $leastMembers / ( $oneCycle - $daysOff ) )) * $oneCycle +  ( $oneCycleRemain + $daysOff );
+            //シフトの一日の最低必要な人数を(連勤制限をクリアできる人まとまりのメンバー - 1日あたりの休日を取る最大値のメンバー）で割る。そのあまりに休日を加味して連勤の制約に引っかからないだけの人員をたす。
+            if( $membersCount >= $leastMembersForMonth )
             {
                 $isMemberWillEnough = true;
+                break;
             }
         }
         if( $isMemberWillEnough )
         {
             for( $insertDay = 1; $insertDay <= $scheduleEndDay; $insertDay++ )
             {
-                $membersCount  = $members->count();
                 for($memberIndex = 0; $memberIndex < $membersCount; $memberIndex++) {
                     //最初に休みの日かどうか判断する。連勤の制約があるためメンバは一定の周期で休日を取得する。
-                    $additionalDayOff = $daysOff - self::ORIGIN_ALIGNER;//連休となる場合は、「休日数  - 一定の周期の1日」の日数を追加で休み
+                    $additionalDayOff = $daysOff - self::ORIGIN_ALIGNER;//必ず休みにしなければ行けない日+何日休みがあるかを出す。
                     $isTodayOff       = false;
-                    while( $additionalDayOff > - self::ORIGIN_ALIGNER && $isTodayOff )
+                    while( $additionalDayOff > -1 && !$isTodayOff )
                     {
                     $isTodayOff = ( $memberIndex + self::ORIGIN_ALIGNER + $additionalDayOff ) % $oneCycle  === ( $insertDay ) % $oneCycle;//メンバの休日の周期は1サイクルで決まるため円卓処理が必要。
                     $additionalDayOff--;
                     }
-                    if( $isTodayOff ) {
+                    if( $isTodayOff )
+                    {
                         $members[ $memberIndex ][ 'last_worked_at' ] = null;
                         continue;
                     }
@@ -95,15 +97,16 @@ class ScheduleController extends Controller
                         $shiftsCount = $allShifts->count();
                         for( $insertShiftIndex = 0 ; $insertShiftIndex < $shiftsCount; $shiftsCount++ )
                         {
-                            $sortedShifts      = $allShifts->sortByDesc('least_members ')->values();
-                            $insertShift       = $sortedShifts[ $insertShiftIndex ];
-                            $insertForShiftId  = $insertShift[ 'id' ];
-                            $shiftStartAt      = $insertShift[ 'start_at' ];
-                            $shiftEndAt        = $insertShift[ 'end_at' ];
+                            $allShifts->sortByDesc('least_members ');
+                            $sortedShifts      = $allShifts->values();
+                            $insertShift       = $sortedShifts;//[ $insertShiftIndex ];
+                            $insertForShiftId  = $insertShift[ $insertShiftIndex ][ 'id' ];
+                            $shiftStartAt      = $insertShift[ $insertShiftIndex ][ 'start_at' ];
+                            $shiftEndAt        = $insertShift[ $insertShiftIndex ][ 'end_at' ];
 
                             //12時間の制約に引っかかるか判定
                             $isEnoughRest = false;
-                            $lastWorkedAt  = $members[ $insertShiftIndex ]['last_worked_at'];
+                            $lastWorkedAt  = $members[ $memberIndex ]['last_worked_at'];
                             if ( $lastWorkedAt === null ) {
                                 global $isEnoughRest;
                                 $isEnoughRest = true;
@@ -168,7 +171,7 @@ class ScheduleController extends Controller
         $scheduleData      = $schedule->whereBetween( 'shift_date', [ $scheduleStartDate, $scheduleEndDate ])->get();
         $dataCount         = $scheduleData->count();
         $isExistSchedule = $dataCount > 0;
-        if( $isExistSchedule )
+        if( !$isExistSchedule )
         {
             $scheduleYearMonth    = $scheduleYear.'-'.$scheduleMonth;
             $scheduleData = self::makeSchedule( $scheduleEndDay, $scheduleYearMonth, $request);
