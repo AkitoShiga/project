@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Controllers\HolidayController;
 use App\Models\Schedule;
 use App\Models\Member;
 use App\Models\Shift;
@@ -14,6 +15,8 @@ class ScheduleController extends Controller
     const DAYS_ONE_WEEK   =  7;
     const MUST_REST_HOURS = 12;
     const ONE_DAY_HOURS   = 24;
+    const WORKING_HOURS   =  8;
+    const WEEK_ARRAY      = ['日', '月', '火', '水', '木', '金', '土'];
     function getEndDay( $year, $month )
     {
         $isUru = false;
@@ -65,7 +68,7 @@ class ScheduleController extends Controller
             $oneCycle             = $daysWork + 1;//連勤の制約をクリアできるスケジュールのメンバーのひとかたまり。連勤の制約の中で最大で稼働出来るメンバーは連勤数+1;
             $oneCycleRemain       = $leastMembers % ( $oneCycle - $daysOff );
             $leastMembersForMonth = floor(( $leastMembers / ( $oneCycle - $daysOff ) )) * $oneCycle +  ( $oneCycleRemain + $daysOff );
-            //シフトの一日の最低必要な人数を(連勤制限をクリアできる人まとまりのメンバー - 1日あたりの休日を取る最大値のメンバー）で割る。そのあまりに休日を加味して連勤の制約に引っかからないだけの人員をたす。
+            //シフトの一日の最低必要な人数を(連勤制限をクリアできる1まとまりのメンバー - 1日あたりの休日を取る最大値のメンバー）で割る。そのあまりに休日を加味して連勤の制約に引っかからないだけの人員をたす。
             if( $membersCount >= $leastMembersForMonth )
             {
                 $isMemberWillEnough = true;
@@ -79,11 +82,12 @@ class ScheduleController extends Controller
                 $allShifts  = Shift::all();
                 for($memberIndex = 0; $memberIndex < $membersCount; $memberIndex++) {
                     //最初に休みの日かどうか判断する。連勤の制約があるためメンバは一定の周期で休日を取得する。
-                    $additionalDayOff = $daysOff - self::ORIGIN_ALIGNER;//必ず休みにしなければ行けない日+何日休みがあるかを出す。
+                    $additionalDayOff = $daysOff - self::ORIGIN_ALIGNER;//必ず休みにしなければ行けない1日+何日休みがあるかを出す。
                     $isTodayOff       = false;
                     while( $additionalDayOff > -1 && !$isTodayOff )
                     {
-                    $isTodayOff = ( $memberIndex + self::ORIGIN_ALIGNER + $additionalDayOff ) % $oneCycle  === ( $insertDay ) % $oneCycle;//メンバの休日の周期は1サイクルで決まるため円卓処理が必要。
+                    //メンバの休日の周期は1サイクルで決まるため円卓処理が必要。
+                    $isTodayOff = ( $memberIndex + self::ORIGIN_ALIGNER + $additionalDayOff ) % $oneCycle  === ( $insertDay ) % $oneCycle;
                     $additionalDayOff--;
                     }
                     if( $isTodayOff )
@@ -93,8 +97,8 @@ class ScheduleController extends Controller
                     }
                     else
                     {
-                        //ここでインサート処理
-                        //シフトの全ての時間帯の内、もっとも人メンバー必要な時間帯のIDを割り出す。
+                        //インサート処理
+                        //シフトの全ての時間帯の内、もっとも人メンバーがな時間帯のIDを割り出す。
                         //12時間の制約に引っかかる場合は+1番目に必要なシフトのIDを割り出していく。
                         for( $insertShiftIndex = 0 ; $insertShiftIndex < $shiftsCount; $insertShiftIndex++ )
                         {
@@ -122,7 +126,8 @@ class ScheduleController extends Controller
                                 if( $restedTime >= self::MUST_REST_HOURS ){ $isEnoughRest = true; }
                             }
                             if ( $isEnoughRest )
-                            {//インサート
+                            {
+                                //インサート
                                 if( $insertDay < 10 ){ $insertDayForDbFormat = str_pad( $insertDay, 2, 0, STR_PAD_LEFT ); }
                                 else{ $insertDayForDbFormat = $insertDay; }
                                 $insertForShiftDate = $scheduleYearMonth . '-' . $insertDayForDbFormat;
@@ -149,7 +154,7 @@ class ScheduleController extends Controller
                     }
                 }
            }
-           $scheduleData = self::getSchedule($request);
+           $scheduleData = self::getSchedule( $request );
        }
        else
        {   global $membersCount;
@@ -160,96 +165,112 @@ class ScheduleController extends Controller
     }
     function convertFormat( $scheduleData, $scheduleYearMonth, $scheduleEndDay )
     {
-        $formattedScheduleData = [];
-        $members               = Member::all();
-        $shift                 = new Shift;
-        $scheduleData          = $scheduleData->sortBy( 'shift_date' )->sortBy( 'shift_id' )->values();
-        $allScheduleDates      = $scheduleData->pluck( 'shift_date' )->unique()->values()->toArray();//日付の情報を取り出す
-        $allShifts             = $scheduleData->pluck( 'shift_id' )->unique()->values()->toArray();  //シフトの情報を取り出す
+        if( gettype( $scheduleData ) === "string"){ return $scheduleData;}
+        else {
+            $formattedScheduleData = [];
+            $members               = Member::all();
+            $shift                 = new Shift;
+            $scheduleData          = $scheduleData->sortBy( 'shift_date' )->sortBy( 'shift_id' )->values();
+            $allScheduleDates      = $scheduleData->pluck( 'shift_date' )->unique()->values()->toArray();//日付の情報を取り出す
+            $allShifts             = $scheduleData->pluck( 'shift_id' )->unique()->values()->toArray();  //シフトの情報を取り出す
 
-        foreach( $allScheduleDates as $scheduleDate )//日付の文までってことは日付のリストがいるよね
-        {
-            $oneOfDate = $scheduleDate;//ここにはイテレータに比例した日付がはいるよね
-            //まず1日のリストをとりだすよね。日付に一致するものをとりだすよね
-            $oneOfDateSchedule = $scheduleData->where( 'shift_date', '=', $scheduleDate);
-            $oneOfDateArray = [];
-            foreach( $allShifts as $oneOfShift )//シフトの文までってことはシフトののリストがいるよねまでいるよね
+            foreach( $allScheduleDates as $scheduleDate )
             {
-                //同じシフトのメンバーのリストをとりだすよね,1日のリストからシフトに一致するものを取り出すよね
-                $oneOfShiftTimeDatas  = $oneOfDateSchedule->where( 'shift_id', '=', $oneOfShift);
-                $oneOfShiftTime  = $shift->where( 'id', '=', $oneOfShift)->first();
-                $shiftStartAt        = $oneOfShiftTime['start_at'];
-                $shiftEndAt          = $oneOfShiftTime['end_at'];
-                $oneOfShiftTime      = $shiftStartAt.'~'.$shiftEndAt;
-                $oneOfShiftMemberIds =  $oneOfShiftTimeDatas->pluck( 'member_id' )->values();
-                $shiftMembers        = '';//現在のシフトのイテレータの箇所のレコードの名前を取り出す
-            foreach($oneOfShiftMemberIds as $shiftMemberId) //メンバーの文までってことはメンバーのIDのリストがいるよね
-            {
-                //メンバーの情報を取り出す
-                $shiftMember = $members->where( 'member_id', '=', $shiftMemberId)->first();
-                $shiftMember = $shiftMember['sei'];
-                //連結
-                $shiftMembers .= $shiftMember.' ';
+                $oneOfDate         = $scheduleDate;
+                $oneOfDateSchedule = $scheduleData->where( 'shift_date', '=', $scheduleDate );
+                $oneOfDateArray    = array();
+                $oneDateShifts     = array();
+                $weekChar          = '';
+                $weekChar          = date("w", strtotime($scheduleDate));
+                $holiday           = new HolidayController;
+                $isHoliday         = false;
+                $isHoliday         = $holiday->checkHoliday( $scheduleDate );
+                foreach( $allShifts as $oneOfShift )
+                {
+                    $oneOfShiftTimeDatas  = $oneOfDateSchedule->where( 'shift_id', '=', $oneOfShift );
+                    $oneOfShiftTime       = $shift->where( 'id', '=', $oneOfShift )->first();
+                    $shiftStartAt         = substr( $oneOfShiftTime[ 'start_at' ], 0, -3 );
+                    $shiftEndAt           = substr( $oneOfShiftTime[ 'end_at' ], 0, -3 );
+                    $oneOfShiftTime       = $shiftStartAt.'~'.$shiftEndAt;
+                    $oneOfShiftMemberIds  = $oneOfShiftTimeDatas->pluck( 'member_id' )->values();
+                    $shiftMembers         = '';
+                    foreach( $oneOfShiftMemberIds as $shiftMemberId )
+                    {
+                        $shiftMember   = $members->where( 'member_id', '=', $shiftMemberId )->first();
+                        $shiftMember   = $shiftMember[ 'sei' ];
+                        $shiftMembers .= $shiftMember.' ';
+                    }
+                    global $oneOfDateArray;
+                    $oneOfDateArray[ 'time' ]    = $oneOfShiftTime;
+                    $oneOfDateArray[ 'members' ] = $shiftMembers;
+                    array_push($oneDateShifts, $oneOfDateArray);
+                }
+                $formattedSchedule[ 'date' ]    = $oneOfDate;
+                $formattedSchedule[ 'week' ]    = $weekChar;
+                $formattedSchedule['isHoliday'] = $isHoliday;
+                $formattedSchedule[ 'shifts' ]  = $oneDateShifts;
+
+                array_push( $formattedScheduleData, $formattedSchedule );
             }
-                //シフトを日付にかくのう
-                global $oneOfDateArray;
-                $oneOfDateArray[$oneOfShiftTime] = $shiftMembers;
-            }
-             //日付をシフト表に格納
-            $formattedSchedule[$oneOfDate] = $oneOfDateArray;
-        }
-        $formattedSchedule =  json_encode( $formattedSchedule, JSON_PRESERVE_ZERO_FRACTION);
-        return $formattedSchedule;
-        /*
-        data {
-            日付: {
-                シフト1:[名前、名前、名前]
-                シフト2:[名前、名前、名前]
-                シフト3:[名前、名前、名前]
-            }
-            日付: {
-                シフト1:[名前、名前、名前]
-                シフト2:[名前、名前、名前]
-                シフト3:[名前、名前、名前]
-            }
-        }
-        [
-         $formattedSchedule = array(
-            2021/日付 => array(
-                シフト1 => array( a.sei.b.sei.c.seid.e.sei ),
-                シフト2 => array( a.sei.b.sei.c.seid.e.sei ),
-                シフト3 => array( a.sei.b.sei.c.seid.e.sei )
-            ),
-            2021/日付 = array(
-                シフト1 => array( a.sei.b.sei.c.seid.e.sei ),
-                シフト2 => array( a.sei.b.sei.c.seid.e.sei ),
-                シフト3 => array( a.sei.b.sei.c.seid.e.sei )
-            ),
-            .
-            .
-            .
-        )
-         */
+            $formattedScheduleData =  json_encode( $formattedScheduleData, JSON_PRESERVE_ZERO_FRACTION );
+            return $formattedScheduleData;
+       }
     }
     function getSchedule( Request $request )
     {
         //日にちの整形処理
         $scheduleYear      = $request->input( 'thisYear' );
         $scheduleMonth     = $request->input( 'thisMonth' );
-        $scheduleYearMonth = $scheduleYear.'-'.$scheduleMonth;
+        $startToEndDate    = self::getStartToEndDate( $scheduleYear, $scheduleMonth );
         $scheduleEndDay    = self::getEndDay( $scheduleYear, $scheduleMonth );
-        if( $scheduleMonth < 10 ) { $month = str_pad( $scheduleMonth, 2, 0, STR_PAD_LEFT ); }
-        $scheduleStartDate = $scheduleYear.'-'.$scheduleMonth.'-'.'01';
-        $scheduleEndDate   = $scheduleYear.'-'.$scheduleMonth.'-'.$scheduleEndDay;
-        $scheduleData      = Schedule::whereBetween( 'shift_date', [ $scheduleStartDate, $scheduleEndDate ])->get();
-        $dataCount         = $scheduleData->count();
-        $isExistSchedule   = $dataCount > 0;
+        $scheduleYearMonth = $scheduleYear.'-'.$scheduleMonth;
+        $scheduleStartDate  = $startToEndDate[0];
+        $scheduleEndDate    = $startToEndDate[1];
+        $scheduleData       = Schedule::whereBetween( 'shift_date', [ $scheduleStartDate, $scheduleEndDate ] )->get();
+        $dataCount          = $scheduleData->count();
+        $isExistSchedule    = $dataCount > 0;
         if( !$isExistSchedule )
         {
             $scheduleData = self::makeSchedule( $scheduleEndDay, $scheduleYearMonth, $request);
         }
-        //レコードの加工
         $scheduleData = self::convertFormat( $scheduleData, $scheduleYearMonth, $scheduleEndDay );
         return $scheduleData;
+    }
+    function getStartToEndDate( $thisYear, $thisMonth)
+    {
+        $EndDay         = self::getEndDay( $thisYear, $thisMonth );
+        if( $thisMonth  < 10 ) { $month = str_pad( $thisMonth, 2, 0, STR_PAD_LEFT ); }
+        $startDate      = $thisYear.'-'.$thisMonth.'-'.'01';
+        $endDate        = $thisYear.'-'.$thisMonth.'-'.$EndDay;
+        $startToEndDate = [ $startDate, $endDate ];
+        return $startToEndDate;
+    }
+    function getTotalWorkingHours( Request $request )
+    {
+        $thisYear           = $request->input( 'thisYear' );
+        $thisMonth          = $request->input( 'thisMonth' );
+        $startToEndDate     = self::getStartToEndDate( $thisYear, $thisMonth );
+        $startDate          = $startToEndDate[ 0 ];
+        $endDate            = $startToEndDate[ 1 ];
+        $allSchedules       = Schedule::whereBetween( 'shift_date', [ $startDate, $endDate ] )->get();
+        $members            = new Member;
+        $members            = $members->all();
+        $totalWorkingHours  = [];
+        $memberInfo         = [];
+        foreach( $members as $member )
+        {
+            $memberId   =  $member[ 'member_id' ];
+            $memberName =  $member[ 'sei' ];
+            $memberSchedule = $allSchedules->where( 'member_id', $memberId )->all();
+            $memberSchedule = count( $memberSchedule );
+            if( $memberSchedule > 0 )
+            {
+                $memberInfo[ 'name' ]  = $memberName;
+                $memberInfo[ 'hours' ] = $memberSchedule * self::WORKING_HOURS;
+                array_push( $totalWorkingHours, $memberInfo );
+            }
+        }
+        $totalWorkingHours = json_encode( $totalWorkingHours, JSON_PRESERVE_ZERO_FRACTION );
+        return $totalWorkingHours;
     }
 }

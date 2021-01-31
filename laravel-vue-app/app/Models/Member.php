@@ -13,7 +13,6 @@ class Member extends Model
      *
      * @var array
      */
-     //protected $fillabele = ['updated_at', 'created_at'];
-     protected $fillable = ['sei', 'mei','updated_at', 'created_at'];
-     protected $guarded   = ['id'];
+     protected $fillable  = [ 'sei', 'mei','updated_at', 'created_at' ];
+     protected $guarded   = [ 'id' ];
 }

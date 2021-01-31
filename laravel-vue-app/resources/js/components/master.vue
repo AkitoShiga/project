@@ -74,7 +74,6 @@ export default {
                 sei: this.add_member.sei,
                 mei: this.add_member.mei,
             }
-            console.log('hooooooooooo');
             axios.get("/sanctum/csrf-cookie").then(response => {
                 axios.post("/api/addMembers", data).then(response => {
                     console.log(response.message);

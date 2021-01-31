@@ -9,14 +9,14 @@
                 </span>
             </div>
             <div>
-                <label>パスワード</label>
+                <label>pass&nbsp</label>
                 <input type="password" v-model="password" />
                 <span v-if="errors.password">
                     {{ errors.password[0] }}
                 </span>
             </div>
 
-            <button>ログイン</button>
+            <b-button class="btn">ログイン</b-button>
         </form>
     </div>
 </template>
