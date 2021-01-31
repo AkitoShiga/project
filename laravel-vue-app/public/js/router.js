@@ -1642,9 +1642,8 @@ var render = function() {
             : _vm._e()
         ]),
         _vm._v(" "),
-        _c("b-button", { staticClass: "btn" }, [_vm._v("ログイン")])
-      ],
-      1
+        _c("button", { staticClass: "btn btn-primary" }, [_vm._v("ログイン")])
+      ]
     )
   ])
 }
@@ -1670,136 +1669,138 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("h1", [_vm._v("master")]),
-      _vm._v(" "),
-      _c("h2", [_vm._v("メンバー一覧")]),
-      _vm._v(" "),
-      _c("table", { staticClass: "table table-borderd" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(this.members, function(member) {
-            return member.is_deleted == 0
-              ? _c("tr", { key: member.id }, [
-                  _c("td", [_vm._v(_vm._s(member.id))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(member.sei))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(member.mei))]),
-                  _vm._v(" "),
-                  _c("td", [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-danger",
-                        on: {
-                          click: function($event) {
-                            return _vm.deleteMember(member.id)
-                          }
-                        }
-                      },
-                      [_vm._v("削除")]
-                    )
-                  ])
-                ])
-              : _vm._e()
-          }),
-          0
-        )
-      ]),
+  return _c("div", [
+    _c("h1", [_vm._v("master")]),
+    _vm._v(" "),
+    _c("h2", [_vm._v("メンバー一覧")]),
+    _vm._v(" "),
+    _c("table", { staticClass: "table table-borderd" }, [
+      _vm._m(0),
       _vm._v(" "),
       _c(
-        "form",
-        {
+        "tbody",
+        _vm._l(this.members, function(member) {
+          return member.is_deleted == 0
+            ? _c("tr", { key: member.id }, [
+                _c("td", [_vm._v(_vm._s(member.id))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(member.sei))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(member.mei))]),
+                _vm._v(" "),
+                _c("td", [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger",
+                      on: {
+                        click: function($event) {
+                          return _vm.deleteMember(member.id)
+                        }
+                      }
+                    },
+                    [_vm._v("削除")]
+                  )
+                ])
+              ])
+            : _vm._e()
+        }),
+        0
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "form",
+      {
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            return _vm.addMembers($event)
+          }
+        }
+      },
+      [
+        _c("h2", [_vm._v("メンバーの追加")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.add_member.sei,
+              expression: "add_member.sei"
+            }
+          ],
+          attrs: { type: "text", placeholder: "姓" },
+          domProps: { value: _vm.add_member.sei },
           on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.addMembers($event)
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.add_member, "sei", $event.target.value)
             }
           }
-        },
-        [
-          _c("h2", [_vm._v("メンバーの追加")]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.add_member.sei,
-                expression: "add_member.sei"
-              }
-            ],
-            attrs: { type: "text", placeholder: "姓" },
-            domProps: { value: _vm.add_member.sei },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.add_member, "sei", $event.target.value)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.add_member.mei,
-                expression: "add_member.mei"
-              }
-            ],
-            attrs: { type: "text", placeholder: "名" },
-            domProps: { value: _vm.add_member.mei },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.add_member, "mei", $event.target.value)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c(
-            "b-button",
+        }),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
             {
-              on: {
-                click: function($event) {
-                  if (
-                    !$event.type.indexOf("key") &&
-                    _vm._k(
-                      $event.keyCode,
-                      "preivent",
-                      undefined,
-                      $event.key,
-                      undefined
-                    )
-                  ) {
-                    return null
-                  }
-                  return _vm.addMembers($event)
-                }
+              name: "model",
+              rawName: "v-model",
+              value: _vm.add_member.mei,
+              expression: "add_member.mei"
+            }
+          ],
+          attrs: { type: "text", placeholder: "名" },
+          domProps: { value: _vm.add_member.mei },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
               }
-            },
-            [_vm._v("追加")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("b-button", { attrs: { type: "button" }, on: { click: _vm.logout } }, [
-        _vm._v("ログアウト")
-      ])
-    ],
-    1
-  )
+              _vm.$set(_vm.add_member, "mei", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "b-button",
+          {
+            on: {
+              click: function($event) {
+                if (
+                  !$event.type.indexOf("key") &&
+                  _vm._k(
+                    $event.keyCode,
+                    "preivent",
+                    undefined,
+                    $event.key,
+                    undefined
+                  )
+                ) {
+                  return null
+                }
+                return _vm.addMembers($event)
+              }
+            }
+          },
+          [_vm._v("追加")]
+        )
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c(
+      "button",
+      {
+        staticClass: "btn btn-primary",
+        attrs: { type: "button" },
+        on: { click: _vm.logout }
+      },
+      [_vm._v("ログアウト")]
+    )
+  ])
 }
 var staticRenderFns = [
   function() {
@@ -1951,9 +1952,15 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _c("button", { attrs: { type: "button" }, on: { click: _vm.logout } }, [
-      _vm._v("ログアウト")
-    ])
+    _c(
+      "button",
+      {
+        staticClass: "btn btn-primary",
+        attrs: { type: "button" },
+        on: { click: _vm.logout }
+      },
+      [_vm._v("ログアウト")]
+    )
   ])
 }
 var staticRenderFns = [

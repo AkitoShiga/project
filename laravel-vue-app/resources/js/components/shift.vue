@@ -46,7 +46,7 @@
 
             </div>
         </div>
-        <button type="button" @click="logout">ログアウト</button>
+        <button class="btn btn-primary" type="button" @click="logout">ログアウト</button>
     </div>
 </template>
 /*

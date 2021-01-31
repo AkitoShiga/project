@@ -27,7 +27,7 @@
             <input type="text" v-model="add_member.mei" placeholder="名">
             <b-button @click.preivent="addMembers">追加</b-button>
         </form>
-        <b-button type="button" @click="logout">ログアウト</b-button>
+        <button class="btn btn-primary" type="button" @click="logout">ログアウト</button>
     </div>
 </template>
 

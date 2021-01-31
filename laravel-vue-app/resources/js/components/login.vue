@@ -16,7 +16,7 @@
                 </span>
             </div>
 
-            <b-button class="btn">ログイン</b-button>
+            <button class="btn btn-primary">ログイン</button>
         </form>
     </div>
 </template>
