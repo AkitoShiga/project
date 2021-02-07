@@ -23,8 +23,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="65afd44c-2bcd-4739-9f48-20ffe93fed1b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/ScheduleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/ScheduleController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/laravel-vue-app/public/js/app.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -253,7 +251,7 @@
       <workItem from="1612326409888" duration="7567000" />
       <workItem from="1612431442817" duration="7831000" />
       <workItem from="1612507345783" duration="188000" />
-      <workItem from="1612594929178" duration="24024000" />
+      <workItem from="1612594929178" duration="24813000" />
     </task>
     <servers />
   </component>
@@ -575,22 +573,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/ScheduleController.php</url>
-          <line>279</line>
-          <option name="timeStamp" value="213" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/ScheduleController.php</url>
-          <line>273</line>
-          <option name="timeStamp" value="215" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/ScheduleController.php</url>
           <line>249</line>
           <option name="timeStamp" value="216" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/laravel-vue-app/app/Http/Controllers/ScheduleController.php</url>
-          <line>257</line>
+          <line>256</line>
           <option name="timeStamp" value="217" />
         </line-breakpoint>
       </breakpoints>
