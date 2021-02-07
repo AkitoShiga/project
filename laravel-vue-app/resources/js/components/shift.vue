@@ -80,18 +80,36 @@ export default {
         this.drawMonth    = this.thisYear + '年' + this.thisMonth + '月';
         this.getSchedule();
         this.getTotalWorkingHours();
+        this.checkWorkedTime();
     },
     methods: {
         getTotalWorkingHours()
         {
-          let data =
-              {
-                thisYear : this.thisYear,
-                thisMonth : this.thisMonth,
-              }
-              axios.post( '/api/getTotalWorkingHours', data )
-                   .then( response => this.totalWorkingTable = response.data )
-                   .catch( error => console.log( error ))
+            setTimeout( () => {
+                return new Promise(() =>{
+                    let data =
+                        {
+                            thisYear: this.thisYear,
+                            thisMonth: this.thisMonth,
+                        }
+                    axios.post('/api/getTotalWorkingHours', data)
+                        .then(response => {
+                            this.totalWorkingTable = response.data;
+                        })
+                        .catch(error => console.log(error))
+                })
+            },5000 );
+        },
+        checkWorkedTime()
+        {
+            setTimeout( () =>
+            {
+                let mostWorkTime = Math.max.apply(Math, this.totalWorkingTable.map( member => { return member.hours } ));
+                if( mostWorkTime >= 180 )
+                {
+                    alert('労働時間超過');
+                }
+            },7000 )
         },
         getWeekChar( schedule )
         {
@@ -111,6 +129,7 @@ export default {
 
         },
         getSchedule(){
+            return new Promise (() => {
             var data =
             {
                 thisYear:  this.thisYear,
@@ -121,18 +140,29 @@ export default {
                     axios.post("/api/getSchedule/", data )
                          .then( response =>
                              {
-                               this.scheduleTable = response.data;
-                                this.scheduleTable.sort( function( val1, val2 )
-                                {
-                                    let val1Date = val1.date;
-                                    let val2Date = val2.date;
-                                    val1Date     = val1Date.substr( 8, 2 );
-                                    val2Date     = val2Date.substr( 8, 2 );
-                                    return val1Date > val2Date? 1 : -1;
-                                })
+                                 if( typeof(response.data) === "string" )
+                                 {
+                                     if( response.data.substring( 0, 3 ) === 'シフト'){ alert( response.data ); }
+                                     else{ this.getSchedule(); }
+                                 }
+                                 else
+                                 {
+                                     this.scheduleTable = response.data;
+                                     this.scheduleTable.sort(function (val1, val2)
+                                     {
+                                         let val1Date = val1.date;
+                                         let val2Date = val2.date;
+                                         val1Date = val1Date.substr(8, 2);
+                                         val2Date = val2Date.substr(8, 2);
+                                         return val1Date > val2Date ? 1 : -1;
+                                     })
+                                 }
                             })
                         .catch( error => { console.log( error ); } )
-            });
+                })
+            })
+            .then( () => { this.getTotalWorkingHours() } )
+            .then( () => { this.checkWorkedTime() } );
         },
         changeMonth( valueMonth )
         {
@@ -141,7 +171,9 @@ export default {
             this.thisYear  = d.getFullYear();
             this.thisMonth = d.getMonth() + 1;
             this.drawMonth = this.thisYear + '年' + this.thisMonth + '月';
-            this.getSchedule();
+            this.getSchedule()
+                .then( () => { this.getTotalWorkingHours() } )
+                .then( () => { this.checkWorkedTime() } );
         },
         logout()
         {

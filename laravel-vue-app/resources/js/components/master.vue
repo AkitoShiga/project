@@ -12,12 +12,12 @@
                     </tr>
                 </thead>
           <tbody >
-		   <tr v-for="member in this.members" v-bind:key="member.id" v-if="member.is_deleted == 0" >
+		   <tr v-for="member in this.members" v-bind:key="member.member_id" v-if="member.is_deleted === 0" >
 
-            <td>{{member.id}}</td>
+            <td>{{member.member_id}}</td>
 			<td>{{member.sei}}</td>
 			<td>{{member.mei}}</td>
-            <td><button class="btn btn-danger" v-on:click="deleteMember(member.id)">削除</button></td>
+            <td><button class="btn btn-danger" v-on:click="deleteMember(member.member_id)">削除</button></td>
             </tr>
           </tbody>
         </table>
@@ -40,7 +40,7 @@ export default {
             mei: "",
             },
             delete_member :{
-                id:1,
+                id:0,
             },
             members:[],
         };
@@ -53,21 +53,20 @@ export default {
             var self = this;
             axios.get("/api/getMembers").then(response => {
                 this.members = response.data;
-                console.log(self.members);
-                console.log('hoihoiho');
+                console.log(self.members[0].member_id);
             });
         },
         deleteMember(deleteId) {
-
+            console.log(deleteId)
             let data = {
                 id: deleteId
             }
+
             axios.post("/api/deleteMembers", data).then(response => {
                 console.log(response.message);
             });
             this.members = [];
-            this.getMembers();
-
+            setTimeout( () => { this.getMembers(); }, 2000)
         },
         addMembers() {
             let data = {
@@ -81,8 +80,12 @@ export default {
                     console.log(error);
                 });
             });
-            this.members = [];
-            this.getMembers();
+            setTimeout( () =>
+            {
+                this.getMembers();
+                this.add_member.sei = '';
+                this.add_member.mei = '';
+            }, 5000)
         },
         logout() {
             axios

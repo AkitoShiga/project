@@ -8,6 +8,9 @@
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/laravel-vue-app/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/laravel-vue-app/app" isTestSource="false" packagePrefix="App\" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel-vue-app/vendor/doctrine/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel-vue-app/vendor/doctrine/dbal" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel-vue-app/vendor/doctrine/event-manager" />
       <excludeFolder url="file://$MODULE_DIR$/laravel-vue-app/vendor/laravel/airlock" />
     </content>
     <orderEntry type="inheritedJdk" />

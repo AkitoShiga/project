@@ -199,7 +199,7 @@ __webpack_require__.r(__webpack_exports__);
         mei: ""
       },
       delete_member: {
-        id: 1
+        id: 0
       },
       members: []
     };
@@ -214,11 +214,13 @@ __webpack_require__.r(__webpack_exports__);
       var self = this;
       axios.get("/api/getMembers").then(function (response) {
         _this.members = response.data;
-        console.log(self.members);
-        console.log('hoihoiho');
+        console.log(self.members[0].member_id);
       });
     },
     deleteMember: function deleteMember(deleteId) {
+      var _this2 = this;
+
+      console.log(deleteId);
       var data = {
         id: deleteId
       };
@@ -226,9 +228,13 @@ __webpack_require__.r(__webpack_exports__);
         console.log(response.message);
       });
       this.members = [];
-      this.getMembers();
+      setTimeout(function () {
+        _this2.getMembers();
+      }, 2000);
     },
     addMembers: function addMembers() {
+      var _this3 = this;
+
       var data = {
         sei: this.add_member.sei,
         mei: this.add_member.mei
@@ -240,17 +246,21 @@ __webpack_require__.r(__webpack_exports__);
           console.log(error);
         });
       });
-      this.members = [];
-      this.getMembers();
+      setTimeout(function () {
+        _this3.getMembers();
+
+        _this3.add_member.sei = '';
+        _this3.add_member.mei = '';
+      }, 5000);
     },
     logout: function logout() {
-      var _this2 = this;
+      var _this4 = this;
 
       axios.post("api/logout").then(function (response) {
         console.log(response);
         localStorage.removeItem("auth");
 
-        _this2.$router.push("/login");
+        _this4.$router.push("/login");
       })["catch"](function (error) {
         console.log(error);
       });
@@ -348,20 +358,38 @@ __webpack_require__.r(__webpack_exports__);
     this.drawMonth = this.thisYear + '年' + this.thisMonth + '月';
     this.getSchedule();
     this.getTotalWorkingHours();
+    this.checkWorkedTime();
   },
   methods: {
     getTotalWorkingHours: function getTotalWorkingHours() {
       var _this = this;
 
-      var data = {
-        thisYear: this.thisYear,
-        thisMonth: this.thisMonth
-      };
-      axios.post('/api/getTotalWorkingHours', data).then(function (response) {
-        return _this.totalWorkingTable = response.data;
-      })["catch"](function (error) {
-        return console.log(error);
-      });
+      setTimeout(function () {
+        return new Promise(function () {
+          var data = {
+            thisYear: _this.thisYear,
+            thisMonth: _this.thisMonth
+          };
+          axios.post('/api/getTotalWorkingHours', data).then(function (response) {
+            _this.totalWorkingTable = response.data;
+          })["catch"](function (error) {
+            return console.log(error);
+          });
+        });
+      }, 5000);
+    },
+    checkWorkedTime: function checkWorkedTime() {
+      var _this2 = this;
+
+      setTimeout(function () {
+        var mostWorkTime = Math.max.apply(Math, _this2.totalWorkingTable.map(function (member) {
+          return member.hours;
+        }));
+
+        if (mostWorkTime >= 180) {
+          alert('労働時間超過');
+        }
+      }, 7000);
     },
     getWeekChar: function getWeekChar(schedule) {
       var weekChar = this.weekArray[schedule.week];
@@ -385,44 +413,64 @@ __webpack_require__.r(__webpack_exports__);
       } else return "normal";
     },
     getSchedule: function getSchedule() {
-      var _this2 = this;
+      var _this3 = this;
 
-      var data = {
-        thisYear: this.thisYear,
-        thisMonth: this.thisMonth
-      };
-      axios.get("/api/user").then(function (response) {
-        axios.post("/api/getSchedule/", data).then(function (response) {
-          _this2.scheduleTable = response.data;
+      return new Promise(function () {
+        var data = {
+          thisYear: _this3.thisYear,
+          thisMonth: _this3.thisMonth
+        };
+        axios.get("/api/user").then(function (response) {
+          axios.post("/api/getSchedule/", data).then(function (response) {
+            if (typeof response.data === "string") {
+              if (response.data.substring(0, 3) === 'シフト') {
+                alert(response.data);
+              } else {
+                _this3.getSchedule();
+              }
+            } else {
+              _this3.scheduleTable = response.data;
 
-          _this2.scheduleTable.sort(function (val1, val2) {
-            var val1Date = val1.date;
-            var val2Date = val2.date;
-            val1Date = val1Date.substr(8, 2);
-            val2Date = val2Date.substr(8, 2);
-            return val1Date > val2Date ? 1 : -1;
+              _this3.scheduleTable.sort(function (val1, val2) {
+                var val1Date = val1.date;
+                var val2Date = val2.date;
+                val1Date = val1Date.substr(8, 2);
+                val2Date = val2Date.substr(8, 2);
+                return val1Date > val2Date ? 1 : -1;
+              });
+            }
+          })["catch"](function (error) {
+            console.log(error);
           });
-        })["catch"](function (error) {
-          console.log(error);
         });
+      }).then(function () {
+        _this3.getTotalWorkingHours();
+      }).then(function () {
+        _this3.checkWorkedTime();
       });
     },
     changeMonth: function changeMonth(valueMonth) {
+      var _this4 = this;
+
       var d = this.thisDateTime;
       d.setMonth(d.getMonth() + valueMonth);
       this.thisYear = d.getFullYear();
       this.thisMonth = d.getMonth() + 1;
       this.drawMonth = this.thisYear + '年' + this.thisMonth + '月';
-      this.getSchedule();
+      this.getSchedule().then(function () {
+        _this4.getTotalWorkingHours();
+      }).then(function () {
+        _this4.checkWorkedTime();
+      });
     },
     logout: function logout() {
-      var _this3 = this;
+      var _this5 = this;
 
       axios.post("api/logout").then(function (response) {
         console.log(response);
         localStorage.removeItem("auth");
 
-        _this3.$router.push("/login");
+        _this5.$router.push("/login");
       })["catch"](function (error) {
         console.log(error);
       });
@@ -1680,9 +1728,9 @@ var render = function() {
       _c(
         "tbody",
         _vm._l(this.members, function(member) {
-          return member.is_deleted == 0
-            ? _c("tr", { key: member.id }, [
-                _c("td", [_vm._v(_vm._s(member.id))]),
+          return member.is_deleted === 0
+            ? _c("tr", { key: member.member_id }, [
+                _c("td", [_vm._v(_vm._s(member.member_id))]),
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(member.sei))]),
                 _vm._v(" "),
@@ -1695,7 +1743,7 @@ var render = function() {
                       staticClass: "btn btn-danger",
                       on: {
                         click: function($event) {
-                          return _vm.deleteMember(member.id)
+                          return _vm.deleteMember(member.member_id)
                         }
                       }
                     },
@@ -17499,7 +17547,7 @@ router.beforeEach(function (to, from, next) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/insightshiga/Documents/my-application/laravel-vue-app/resources/js/router.js */"./resources/js/router.js");
+module.exports = __webpack_require__(/*! /var/www/html/laravel-vue-app/resources/js/router.js */"./resources/js/router.js");
 
 
 /***/ })

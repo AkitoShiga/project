@@ -13,6 +13,7 @@ class Member extends Model
      *
      * @var array
      */
-     protected $fillable  = [ 'sei', 'mei','updated_at', 'created_at' ];
-     protected $guarded   = [ 'id' ];
+     protected $fillable  = [ 'sei', 'mei',  'is_deleted', 'is_shifted', 'shift_count', 'last_worked_at', 'updated_at', 'created_at'];
+     protected $guarded   = [ 'member_id' ];
+     protected $primaryKey = 'member_id';
 }

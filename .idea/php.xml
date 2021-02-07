@@ -112,16 +112,10 @@
       <path value="$PROJECT_DIR$/laravel-vue-app/vendor/phpunit/php-code-coverage" />
       <path value="$PROJECT_DIR$/laravel-vue-app/vendor/barryvdh/laravel-cors" />
       <path value="$PROJECT_DIR$/laravel-vue-app/vendor/laravel/airlock" />
+      <path value="$PROJECT_DIR$/laravel-vue-app/vendor/doctrine/event-manager" />
+      <path value="$PROJECT_DIR$/laravel-vue-app/vendor/doctrine/cache" />
+      <path value="$PROJECT_DIR$/laravel-vue-app/vendor/doctrine/dbal" />
     </include_path>
-  </component>
-  <component name="PhpProjectServersManager">
-    <servers>
-      <server host="dockerhost" id="0003e626-2786-4503-84d3-cb85c9eaa0c2" name="Laravel" port="9003" use_path_mappings="true">
-        <path_mappings>
-          <mapping local-root="$PROJECT_DIR$" remote-root="/var/www/html" />
-        </path_mappings>
-      </server>
-    </servers>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />
   <component name="PhpStepFilterConfiguration">

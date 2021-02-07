@@ -47,7 +47,7 @@ class ScheduleController extends Controller
         return $day;
     }
 
-    function makeSchedule( $scheduleEndDay, $scheduleYearMonth, $request )
+    function makeSchedule( $scheduleEndDay, $scheduleYearMonth, $request , $scheduleYear, $scheduleMonth )
     {
         $schedule     = new Schedule;
         $allShifts    = Shift::all();
@@ -97,11 +97,11 @@ class ScheduleController extends Controller
                     }
                     else
                     {
-                        //インサート処理
                         //シフトの全ての時間帯の内、もっとも人メンバーがな時間帯のIDを割り出す。
                         //12時間の制約に引っかかる場合は+1番目に必要なシフトのIDを割り出していく。
                         for( $insertShiftIndex = 0 ; $insertShiftIndex < $shiftsCount; $insertShiftIndex++ )
                         {
+                            $shiftIterator     = 0;
                             $allShifts         = $allShifts->sortByDesc('least_members')->values();
                             $insertForShiftId  = $allShifts[ $insertShiftIndex ][ 'id' ];
                             $shiftStartAt      = $allShifts[ $insertShiftIndex ][ 'start_at' ];
@@ -147,21 +147,172 @@ class ScheduleController extends Controller
                                $members[ $memberIndex ][ 'shift_count' ]          += 1;
                                $members[ $memberIndex ][ 'last_worked_at' ]        = $shiftEndAt;
                                $members[ $memberIndex ][ 'is_shifted' ]            = true;
-                               $allShifts[ $insertShiftIndex ][ 'least_members' ] -= 1;
-                               break;//ここでブレークしないと同日の違うシフトにいれられそうになる。
+                               $shiftIterator++;
+                               $allShifts[ $insertShiftIndex ][ 'least_members' ] -= ( 1 + $shiftIterator/100);
+                               break;
                             }
                         }
                     }
                 }
            }
+           self:: adjustmentSchedule( $scheduleYear, $scheduleMonth );
            $scheduleData = self::getSchedule( $request );
        }
        else
-       {   global $membersCount;
+       {
            $notEnoughMembers = $leastMembersForMonth - $membersCount;
-           $scheduleData     = '必要人数：あと'.$notEnoughMembers.'人';
+           $scheduleData     = "シフト作成不可\n最低必要人数：あと".$notEnoughMembers.'人';
        }
        return $scheduleData;
+    }
+    function adjustmentSchedule( $scheduleYear, $scheduleMonth )
+    {
+       $yearMonth       = $scheduleYear.'-'.$scheduleMonth;
+       $mostShifted     = 0;
+       $leastShifted    = 0;
+       $membersInfo     = [];
+       $members         = new Member;
+       $members         = $members->all();
+       $startToEndDate  = self::getStartToEndDate( $scheduleYear, $scheduleMonth );
+       $startDate       = $startToEndDate[ 0 ];
+       $endDate         = $startToEndDate[ 1 ];
+       $allSchedules    = Schedule::whereBetween( 'shift_date', [ $startDate, $endDate ] )->get();
+       $shiftDates      = $allSchedules->pluck('shift_date')->unique()->sortBy('shift_date')->values();
+       $memberInfo     = [];
+        foreach( $members as $member )
+        {
+            $memberId       = $member[ 'member_id' ];
+            $memberSchedule = $allSchedules->where( 'member_id', $memberId )->all();
+            $memberSchedule = count( $memberSchedule );
+            $memberInfo[$memberId] = $memberSchedule;
+        }
+        do
+        {
+            $mostShifted         = max( $memberInfo );
+            $leastShifted        = min( $memberInfo );
+            $mostShiftedId       = array_keys( $memberInfo, max( $memberInfo ) )[ 0 ];
+            $leastShiftedId      = array_keys( $memberInfo, min( $memberInfo ) )[ 0 ];
+            $shiftTimeDifference = $mostShifted - $leastShifted;
+            if( $shiftTimeDifference > 1 )
+            {
+                foreach( $shiftDates as $shiftDate )
+                {
+                    $canBreak                = false;
+                    $shiftDateInfo           = Schedule::whereBetween( 'shift_date', [ $shiftDate, $shiftDate ])->get();
+                    $shiftedIdCount          = $shiftDateInfo->whereBetween( 'member_id' ,  [ $leastShiftedId, $leastShiftedId ] )->count();
+                    $isNotExistsLeastShifted = $shiftedIdCount === 0;
+                    if( $isNotExistsLeastShifted )
+                    {
+                        $shiftDay                   = substr( $shiftDate, -2, 2 );
+                        $isSixConsecutiveWorkBefore = $shiftDay - 6 < 1;
+                        if( !$isSixConsecutiveWorkBefore )
+                        {
+                           $sixDaysBeforeDate          = $yearMonth . '-'.( self::addZero($shiftDay - 6));
+                           $consecutiveWorkTimesBefore = Schedule::whereBetween( 'shift_date', [ $sixDaysBeforeDate, $shiftDate ])
+                                                                 ->where( 'member_id', $leastShiftedId )
+                                                                 ->count();
+                            echo( $consecutiveWorkTimesBefore);
+                           $isSixConsecutiveWorkBefore = $consecutiveWorkTimesBefore < 6;
+                        }
+                        $endDay                    = substr( $endDate, -2, 2 );
+                        $isSixConsecutiveWorkAfter = $shiftDay + 6 > $endDay;
+                        if( !$isSixConsecutiveWorkAfter )
+                        {
+                            $sixDaysAfterDate          = $yearMonth . '-'. ( self::addZero($shiftDay + 6 ) );
+                            $consecutiveWorkTimesAfter = Schedule::whereBetween( 'shift_date', [ $shiftDate, $sixDaysAfterDate])
+                                                                 ->where( 'member_id', $leastShiftedId )
+                                                                 ->count();
+                            echo( $consecutiveWorkTimesAfter);
+                            $isSixConsecutiveWorkAfter = $consecutiveWorkTimesAfter < 6;
+                        }
+                        if( $isSixConsecutiveWorkBefore && $isSixConsecutiveWorkAfter )
+                        {
+                            $restEnoughBefore        = false;
+                            $restEnoughAfter         = false;
+                            $shifts                  = new Shift;
+                            $allShifts               = $shifts->all();
+                            $shiftDayTomorrow        = $shiftDay + 1;
+                            $shiftDayYesterday       = $shiftDay - 1;
+                            $shiftDayTomorrow        = self::addZero( $shiftDayTomorrow );
+                            $shiftDayYesterday       = self::addZero( $shiftDayYesterday );
+                            $shiftDateTomorrow       = $yearMonth . '-' . $shiftDayTomorrow;
+                            $shiftDateYesterday      = $yearMonth . '-' . $shiftDayYesterday;
+                            $shiftDateTomorrowInfo   = Schedule::where( 'shift_date', $shiftDateTomorrow)
+                                                               ->where( 'member_id' , $leastShiftedId )
+                                                               ->get();
+                            $shiftDateTomorrowInfo   = $shiftDateTomorrowInfo->pluck( 'shift_id')->all();
+
+                            $shiftDateYesterdayInfo  = Schedule::where( 'shift_date', $shiftDateYesterday)
+                                                               ->where('member_id', $leastShiftedId )
+                                                               ->get();
+                            $shiftDateYesterdayInfo  = $shiftDateYesterdayInfo->pluck('shift_id')->all();
+                            if(  empty( $shiftDateTomorrowInfo ) ){ $restEnoughAfter = true; }
+                            else
+                            {
+                                $shiftDateTomorrowInfo   = $shiftDateTomorrowInfo[ 0 ];
+                                $shiftDateTomorrowShift  = Shift::get( 'id', $shiftDateTomorrowInfo );
+                                $tomorrowWillWorkedAt    = Shift::get( 'id', $shiftDateTomorrowInfo )->pluck( 'start_at' );
+                                $tomorrowWillWorkedAt    = substr( $tomorrowWillWorkedAt, 0, 2  );
+                                $tomorrowWillWorkedAt    = ( integer )$tomorrowWillWorkedAt;
+                            }
+                            if(  empty( $shiftDateYesterdayInfo ) ){ $restEnoughBefore = true; }
+                            else
+                            {
+                                $shiftDateYesterdayInfo  = $shiftDateYesterdayInfo[ 0 ];
+                                $shiftDateYesterdayShift = Shift::get( 'id', $shiftDateYesterdayInfo );
+                                $yesterdayTillWorkedAt   = Shift::get( 'id', $shiftDateYesterdayInfo )->pluck( 'end_at' );
+                                $yesterdayTillWorkedAt   = substr( $yesterdayTillWorkedAt , 0, 2);
+                                $yesterdayTillWorkedAt   = ( integer )$yesterdayTillWorkedAt;
+                            }
+                            for( $i = 0; $i < 3; $i++)
+                            {
+                                $shiftStartAt = $allShifts->pluck( 'start_at' )->all()[$i];
+                                $shiftEndAt   = $allShifts->pluck( 'end_at' )->all()[$i];
+                                $shiftId      = $allShifts->pluck( 'id' )->all()[$i];
+                                $shiftStartAt = substr( $shiftStartAt, 0, 2 );
+                                $shiftEndAt   = substr( $shiftEndAt, 0, 2 );
+                                if( !$restEnoughBefore )
+                                {
+                                    $tomorrowWillWorkedAt    = Shift::get( 'id', $shiftDateTomorrowInfo )->pluck( 'start_at' );
+                                    $tomorrowWillWorkedAt    = substr( $tomorrowWillWorkedAt, 0, 2  );
+                                    $tomorrowWillWorkedAt    = ( integer )$tomorrowWillWorkedAt;
+                                    $shiftStartAt +=  self::ONE_DAY_HOURS;
+                                    $restEnoughBefore = ( $shiftStartAt - $yesterdayTillWorkedAt >= 12 );
+                                }
+                                if( !$restEnoughAfter )
+                                {
+                                    $shiftDateYesterdayInfo  = $shiftDateYesterdayInfo[ 0 ];
+                                    $yesterdayTillWorkedAt   = Shift::get( 'id', $shiftDateYesterdayInfo )->pluck( 'end_at' );
+                                    $yesterdayTillWorkedAt   = substr( $yesterdayTillWorkedAt , 0, 2);
+                                    $tomorrorwWillWorkedAt += self::ONE_DAY_HOURS;
+                                    $restEnoughAfter = ( $tomorrowWillWorkedAt - $shiftEndAt >= 12 );
+                                }
+                                if( $restEnoughBefore && $restEnoughAfter )
+                                {
+                                    $updated_At = date( "Y-m-d H:i:s");
+                                    $created_At = $updated_At;
+                                    Schedule::create
+                                    ([
+                                        'shift_date' => $shiftDate,
+                                        'shift_id'   => $shiftId,
+                                        'member_id'  => $leastShiftedId,
+                                        'updated_at' => $updated_At,
+                                        'created_at' => $created_At
+                                    ])
+                                    ->save();
+                                    $memberInfo[ $leastShiftedId ] += 1;
+                                    $canBreak = true;
+                                    break;
+
+                                }
+                            }
+                        }
+                    }
+                    if( $canBreak ){ break; }
+                }
+            }
+        }
+        while( $shiftTimeDifference > 1 );
     }
     function convertFormat( $scheduleData, $scheduleYearMonth, $scheduleEndDay )
     {
@@ -171,8 +322,8 @@ class ScheduleController extends Controller
             $members               = Member::all();
             $shift                 = new Shift;
             $scheduleData          = $scheduleData->sortBy( 'shift_date' )->sortBy( 'shift_id' )->values();
-            $allScheduleDates      = $scheduleData->pluck( 'shift_date' )->unique()->values()->toArray();//日付の情報を取り出す
-            $allShifts             = $scheduleData->pluck( 'shift_id' )->unique()->values()->toArray();  //シフトの情報を取り出す
+            $allScheduleDates      = $scheduleData->pluck( 'shift_date' )->unique()->values()->toArray();
+            $allShifts             = $scheduleData->pluck( 'shift_id' )->unique()->values()->toArray();
 
             foreach( $allScheduleDates as $scheduleDate )
             {
@@ -231,10 +382,16 @@ class ScheduleController extends Controller
         $isExistSchedule    = $dataCount > 0;
         if( !$isExistSchedule )
         {
-            $scheduleData = self::makeSchedule( $scheduleEndDay, $scheduleYearMonth, $request);
+            $scheduleMonth = self::addZero( $scheduleMonth );
+            $scheduleData = self::makeSchedule( $scheduleEndDay, $scheduleYearMonth, $request, $scheduleYear, $scheduleMonth);
         }
         $scheduleData = self::convertFormat( $scheduleData, $scheduleYearMonth, $scheduleEndDay );
         return $scheduleData;
+    }
+    function addZero( $num )
+    {
+        if( $num  < 10 ) { $num = str_pad( $num, 2, 0, STR_PAD_LEFT ); }
+        return $num;
     }
     function getStartToEndDate( $thisYear, $thisMonth)
     {
