@@ -40,6 +40,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="PhpDebugGeneral" xdebug_debug_port="9003" xdebug_show_addresses="true" hide_empty_superglobals="false" show_user_defined_constants="false" xdebug_force_break_when_no_path_mapping="false" xdebug_force_break_when_outside_project="false" />
@@ -220,6 +225,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="JavaScript Debug.Cors.php" />
+        <item itemvalue="JavaScript Debug.Cors.php" />
       </list>
     </recent_temporary>
   </component>
@@ -267,6 +273,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1988" y="136" key="#CLI_Interpreters" timestamp="1609432581982">
