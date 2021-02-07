@@ -9,7 +9,7 @@ use App\Models\Member;
 
 class MemberController extends Controller
 {
-    //
+    public function returnIndex () { return view ('index');}
     public function getMembers() {
         $member = new Member;
         $value = $member::where( 'is_deleted', 0 )->get( [ 'member_id', 'sei', 'mei', 'is_deleted' ] );
