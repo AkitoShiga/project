@@ -55,6 +55,7 @@ class ScheduleController extends Controller
         $members      = $allMembers->whereStrict( 'is_deleted', 0 )->values();
         $membersCount = $members->count();
         $shiftsCount  = $allShifts->count();
+        $randomNum    = rand( 1, $membersCount );
         //そもそも人が足りるか計算
         $leastMembers         = Shift::sum('least_members' );
         $leastMembersForMonth = 0; //休日を含めて運用可能な最低人数;
@@ -65,10 +66,11 @@ class ScheduleController extends Controller
         for (; $daysOff > 0 && !$isMemberWillEnough ; $daysOff-- )
         {
             $daysWork             = self::DAYS_ONE_WEEK - $daysOff;
-            $oneCycle             = $daysWork + 1;//連勤の制約をクリアできるスケジュールのメンバーのひとかたまり。連勤の制約の中で最大で稼働出来るメンバーは連勤数+1;
+            $oneCycle             = $daysWork + 1;//連勤の制約をクリアできるスケジュールのメンバー構成。連勤の制約の中で最大で稼働出来るメンバーは連勤数+1人;
             $oneCycleRemain       = $leastMembers % ( $oneCycle - $daysOff );
             $leastMembersForMonth = floor(( $leastMembers / ( $oneCycle - $daysOff ) )) * $oneCycle +  ( $oneCycleRemain + $daysOff );
-            //シフトの一日の最低必要な人数を(連勤制限をクリアできる1まとまりのメンバー - 1日あたりの休日を取る最大値のメンバー）で割る。そのあまりに休日を加味して連勤の制約に引っかからないだけの人員をたす。
+            //シフトの一日の最低必要な人数を(連勤制限をクリアできる1まとまりのメンバー - 1日あたりの休日を取る最大値のメンバー）で割る。
+            //その余りに休日を考慮した上で連勤の制約に引っかからないだけの人員をたす。
             if( $membersCount >= $leastMembersForMonth )
             {
                 $isMemberWillEnough = true;
@@ -80,19 +82,20 @@ class ScheduleController extends Controller
             for( $insertDay = 1; $insertDay <= $scheduleEndDay; $insertDay++ )
             {
                 $allShifts  = Shift::all();
+                //最初に休みの日かどうか判断する。連勤の制約があるためメンバは一定の周期で休日を取得する。
                 for($memberIndex = 0; $memberIndex < $membersCount; $memberIndex++) {
-                    //最初に休みの日かどうか判断する。連勤の制約があるためメンバは一定の周期で休日を取得する。
-                    $additionalDayOff = $daysOff - self::ORIGIN_ALIGNER;//必ず休みにしなければ行けない1日+何日休みがあるかを出す。
-                    $isTodayOff       = false;
+                    $insertMemberIndex = ( ($memberIndex + $randomNum ) % $membersCount );//恣意的なメンバーのIDからシフト作成を行うことで公平性を担保する。
+                    $additionalDayOff  = $daysOff - self::ORIGIN_ALIGNER;                 //必ず休みにしなければ行けない1日+何日休みがあるかを出す。
+                    $isTodayOff        = false;
                     while( $additionalDayOff > -1 && !$isTodayOff )
                     {
                     //メンバの休日の周期は1サイクルで決まるため円卓処理が必要。
-                    $isTodayOff = ( $memberIndex + self::ORIGIN_ALIGNER + $additionalDayOff ) % $oneCycle  === ( $insertDay ) % $oneCycle;
+                    $isTodayOff = ( $insertMemberIndex + self::ORIGIN_ALIGNER + $additionalDayOff ) % $oneCycle  === ( $insertDay ) % $oneCycle;
                     $additionalDayOff--;
                     }
                     if( $isTodayOff )
                     {
-                        $members[ $memberIndex ][ 'last_worked_at' ] = null;
+                        $members[ $insertMemberIndex ][ 'last_worked_at' ] = null;
                         continue;
                     }
                     else
@@ -106,11 +109,9 @@ class ScheduleController extends Controller
                             $insertForShiftId  = $allShifts[ $insertShiftIndex ][ 'id' ];
                             $shiftStartAt      = $allShifts[ $insertShiftIndex ][ 'start_at' ];
                             $shiftEndAt        = $allShifts[ $insertShiftIndex ][ 'end_at' ];
-                            $test = $allShifts[ $insertShiftIndex]['least_members'];
-
                             //12時間の制約に引っかかるか判定
                             $isEnoughRest = false;
-                            $lastWorkedAt  = $members[ $memberIndex ]['last_worked_at'];
+                            $lastWorkedAt  = $members[ $insertMemberIndex ]['last_worked_at'];
                             if ( $lastWorkedAt === null ) {
                                 global $isEnoughRest;
                                 $isEnoughRest = true;
@@ -127,11 +128,10 @@ class ScheduleController extends Controller
                             }
                             if ( $isEnoughRest )
                             {
-                                //インサート
                                 if( $insertDay < 10 ){ $insertDayForDbFormat = str_pad( $insertDay, 2, 0, STR_PAD_LEFT ); }
                                 else{ $insertDayForDbFormat = $insertDay; }
                                 $insertForShiftDate = $scheduleYearMonth . '-' . $insertDayForDbFormat;
-                                $insertForMemberId  = $members[ $memberIndex ][ 'member_id' ];
+                                $insertForMemberId  = $members[ $insertMemberIndex ][ 'member_id' ];
                                 $insertForUpdateAt  = date( "Y-m-d H:i:s" );
                                 $insertForCreatedAt =  $insertForUpdateAt;
                                 $schedule
@@ -144,10 +144,10 @@ class ScheduleController extends Controller
                                    'created_at' => $insertForCreatedAt
                                ] )
                                ->save();
-                               $members[ $memberIndex ][ 'shift_count' ]          += 1;
-                               $members[ $memberIndex ][ 'last_worked_at' ]        = $shiftEndAt;
-                               $members[ $memberIndex ][ 'is_shifted' ]            = true;
                                $shiftIterator++;
+                               $members[ $insertMemberIndex ][ 'last_worked_at' ]  = $shiftEndAt;
+                               $members[ $insertMemberIndex ][ 'is_shifted' ]      = true;
+                               $members[ $insertMemberIndex ][ 'shift_count' ]    += 1;
                                $allShifts[ $insertShiftIndex ][ 'least_members' ] -= ( 1 + $shiftIterator/100);
                                break;
                             }
@@ -170,7 +170,6 @@ class ScheduleController extends Controller
        $yearMonth       = $scheduleYear.'-'.$scheduleMonth;
        $mostShifted     = 0;
        $leastShifted    = 0;
-       $membersInfo     = [];
        $members         = new Member;
        $members         = $members->all();
        $startToEndDate  = self::getStartToEndDate( $scheduleYear, $scheduleMonth );
@@ -241,7 +240,6 @@ class ScheduleController extends Controller
                                                                ->where( 'member_id' , $leastShiftedId )
                                                                ->get();
                             $shiftDateTomorrowInfo   = $shiftDateTomorrowInfo->pluck( 'shift_id')->all();
-
                             $shiftDateYesterdayInfo  = Schedule::where( 'shift_date', $shiftDateYesterday)
                                                                ->where('member_id', $leastShiftedId )
                                                                ->get();
@@ -250,19 +248,17 @@ class ScheduleController extends Controller
                             else
                             {
                                 $shiftDateTomorrowInfo   = $shiftDateTomorrowInfo[ 0 ];
-                                $shiftDateTomorrowShift  = Shift::get( 'id', $shiftDateTomorrowInfo );
-                                $tomorrowWillWorkedAt    = Shift::get( 'id', $shiftDateTomorrowInfo )->pluck( 'start_at' );
-                                $tomorrowWillWorkedAt    = substr( $tomorrowWillWorkedAt, 0, 2  );
+                                $tomorrowWillWorkedAt    = Shift::where( 'id', $shiftDateTomorrowInfo )->first()->pluck( 'start_at' );
+                                $tomorrowWillWorkedAt    = substr( $tomorrowWillWorkedAt[ $shiftDateTomorrowInfo - 1 ], 0, 2  );
                                 $tomorrowWillWorkedAt    = ( integer )$tomorrowWillWorkedAt;
                             }
                             if(  empty( $shiftDateYesterdayInfo ) ){ $restEnoughBefore = true; }
                             else
                             {
-                                $shiftDateYesterdayInfo  = $shiftDateYesterdayInfo[ 0 ];
-                                $shiftDateYesterdayShift = Shift::get( 'id', $shiftDateYesterdayInfo );
-                                $yesterdayTillWorkedAt   = Shift::get( 'id', $shiftDateYesterdayInfo )->pluck( 'end_at' );
-                                $yesterdayTillWorkedAt   = substr( $yesterdayTillWorkedAt , 0, 2);
-                                $yesterdayTillWorkedAt   = ( integer )$yesterdayTillWorkedAt;
+                                $shiftDateYesterdayInfo   = $shiftDateYesterdayInfo[ 0 ];
+                                $yesterdayTillWorkedAt    = Shift::where( 'id', $shiftDateYesterdayInfo )->first()->pluck( 'end_at' );
+                                $yesterdayTillWorkedAt    = substr( $yesterdayTillWorkedAt[$shiftDateYesterdayInfo - 1 ] , 0, 2);
+                                $yesterdayTillWorkedAt    = ( integer )$yesterdayTillWorkedAt;
                             }
                             for( $i = 0; $i < 3; $i++)
                             {
@@ -273,18 +269,16 @@ class ScheduleController extends Controller
                                 $shiftEndAt   = substr( $shiftEndAt, 0, 2 );
                                 if( !$restEnoughBefore )
                                 {
-                                    $tomorrowWillWorkedAt    = Shift::get( 'id', $shiftDateTomorrowInfo )->pluck( 'start_at' );
-                                    $tomorrowWillWorkedAt    = substr( $tomorrowWillWorkedAt, 0, 2  );
-                                    $tomorrowWillWorkedAt    = ( integer )$tomorrowWillWorkedAt;
-                                    $shiftStartAt +=  self::ONE_DAY_HOURS;
-                                    $restEnoughBefore = ( $shiftStartAt - $yesterdayTillWorkedAt >= 12 );
+                                    $yesterdayTillWorkedAt   = Shift::where( 'id', $shiftDateYesterdayInfo )->first()->pluck( 'end_at' );
+                                    $yesterdayTillWorkedAt   = substr( $yesterdayTillWorkedAt[$shiftDateYesterdayInfo -1 ] , 0, 2);
+                                    $shiftStartAt           +=  self::ONE_DAY_HOURS;
+                                    $restEnoughBefore        = ( $shiftStartAt - $yesterdayTillWorkedAt >= 12 );
                                 }
                                 if( !$restEnoughAfter )
                                 {
-                                    $shiftDateYesterdayInfo  = $shiftDateYesterdayInfo[ 0 ];
-                                    $yesterdayTillWorkedAt   = Shift::get( 'id', $shiftDateYesterdayInfo )->pluck( 'end_at' );
-                                    $yesterdayTillWorkedAt   = substr( $yesterdayTillWorkedAt , 0, 2);
-                                    $tomorrorwWillWorkedAt += self::ONE_DAY_HOURS;
+                                    $tomorrowWillWorkedAt    = Shift::where( 'id', $shiftDateTomorrowInfo )->first()->pluck( 'start_at' );
+                                    $tomorrowWillWorkedAt    = substr( $tomorrowWillWorkedAt[$shiftDateTomorrowInfo -1 ], 0, 2  );
+                                    $tomorrowWillWorkedAt   += self::ONE_DAY_HOURS;
                                     $restEnoughAfter = ( $tomorrowWillWorkedAt - $shiftEndAt >= 12 );
                                 }
                                 if( $restEnoughBefore && $restEnoughAfter )
@@ -303,7 +297,6 @@ class ScheduleController extends Controller
                                     $memberInfo[ $leastShiftedId ] += 1;
                                     $canBreak = true;
                                     break;
-
                                 }
                             }
                         }
@@ -314,10 +307,13 @@ class ScheduleController extends Controller
         }
         while( $shiftTimeDifference > 1 );
     }
-    function convertFormat( $scheduleData, $scheduleYearMonth, $scheduleEndDay )
+    function convertFormat( $scheduleData )
     {
-        if( gettype( $scheduleData ) === "string"){ return $scheduleData;}
-        else {
+        //クライアント側で表示させやすくするためにデータ構造を変更する
+        //エラーメッセージが引数に来ている場合はスルー
+        if( gettype( $scheduleData ) === "string" ){ return $scheduleData; }
+        else
+        {
             $formattedScheduleData = [];
             $members               = Member::all();
             $shift                 = new Shift;
@@ -360,7 +356,6 @@ class ScheduleController extends Controller
                 $formattedSchedule[ 'week' ]    = $weekChar;
                 $formattedSchedule['isHoliday'] = $isHoliday;
                 $formattedSchedule[ 'shifts' ]  = $oneDateShifts;
-
                 array_push( $formattedScheduleData, $formattedSchedule );
             }
             $formattedScheduleData =  json_encode( $formattedScheduleData, JSON_PRESERVE_ZERO_FRACTION );
@@ -369,12 +364,11 @@ class ScheduleController extends Controller
     }
     function getSchedule( Request $request )
     {
-        //日にちの整形処理
-        $scheduleYear      = $request->input( 'thisYear' );
-        $scheduleMonth     = $request->input( 'thisMonth' );
-        $startToEndDate    = self::getStartToEndDate( $scheduleYear, $scheduleMonth );
-        $scheduleEndDay    = self::getEndDay( $scheduleYear, $scheduleMonth );
-        $scheduleYearMonth = $scheduleYear.'-'.$scheduleMonth;
+        $scheduleYear       = $request->input( 'thisYear' );
+        $scheduleMonth      = $request->input( 'thisMonth' );
+        $startToEndDate     = self::getStartToEndDate( $scheduleYear, $scheduleMonth );
+        $scheduleEndDay     = self::getEndDay( $scheduleYear, $scheduleMonth );
+        $scheduleYearMonth  = $scheduleYear.'-'.$scheduleMonth;
         $scheduleStartDate  = $startToEndDate[0];
         $scheduleEndDate    = $startToEndDate[1];
         $scheduleData       = Schedule::whereBetween( 'shift_date', [ $scheduleStartDate, $scheduleEndDate ] )->get();
@@ -382,14 +376,16 @@ class ScheduleController extends Controller
         $isExistSchedule    = $dataCount > 0;
         if( !$isExistSchedule )
         {
+            //DBにシフトのデータなかったら作る
             $scheduleMonth = self::addZero( $scheduleMonth );
             $scheduleData = self::makeSchedule( $scheduleEndDay, $scheduleYearMonth, $request, $scheduleYear, $scheduleMonth);
         }
-        $scheduleData = self::convertFormat( $scheduleData, $scheduleYearMonth, $scheduleEndDay );
+        $scheduleData = self::convertFormat( $scheduleData );
         return $scheduleData;
     }
     function addZero( $num )
     {
+        //DBの日付データは数字が0埋めされているので、DBに問い合わせるときにこの処理がいる
         if( $num  < 10 ) { $num = str_pad( $num, 2, 0, STR_PAD_LEFT ); }
         return $num;
     }
